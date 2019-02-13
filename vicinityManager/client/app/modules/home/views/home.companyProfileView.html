@@ -5,155 +5,152 @@
 
 <section class="content">
 
-      <div class="row">
-        <div class="coll-md-1" ng-hide="loaded" style="margin: auto; width:60%">
-          <i class="fa fa-refresh fa-spin fa-4x" style="text-align: center; display: block"/>
-        </div>
+  <div class="row">
+    <div class="coll-md-1" ng-hide="loaded" style="margin: auto; width:60%">
+      <i class="fa fa-refresh fa-spin fa-4x" style="text-align: center; display: block" />
+    </div>
 
-        <div class="col-md-3" ng-show="loaded">
+    <div class="col-md-3" ng-show="loaded">
 
-          <!-- Profile Image -->
-          <div class="box box-primary">
-            <div class="box-body box-profile">
-              <!-- <img class="profile-user-img img-responsive img-circle" ng-src="{{avatar}}" alt="Company profile picture"> -->
+      <!-- Profile Image -->
+      <div class="box box-primary">
+        <div class="box-body box-profile">
+          <!-- <img class="profile-user-img img-responsive img-circle" ng-src="{{avatar}}" alt="Company profile picture"> -->
 
-              <div ng-show="!imAdmin" style="width: 200px; text-align: center; margin: 0 auto">
-                <img ng-src="{{avatar}}" class="img-circle" alt="User profile picture" style="height:200px; width:200px;  text-align: center; border: 3px solid; border-color: #d2d6de">
-              </div>
+          <div ng-show="!imAdmin" style="width: 200px; text-align: center; margin: 0 auto">
+            <img ng-src="{{avatar}}" class="img-circle" alt="User profile picture" style="height:200px; width:200px;  text-align: center; border: 3px solid; border-color: #d2d6de">
+          </div>
 
-                <div ng-show="imAdmin" id="changeAvatar" style="width: 200px; text-align: center; margin: 0 auto">
-                  <span style="position: absolute" >+Change avatar</span>
-                  <a href="" ng-click="showLoadPic()" style="cursor: pointer">
-                    <img id="pic" ng-src="{{avatar}}" class="img-circle" alt="User profile picture" style="height:200px; width:200px; text-align: center; border: 3px solid; border-color: #d2d6de">
-                  </a>
-                </div>
+          <div ng-show="imAdmin" id="changeAvatar" style="width: 200px; text-align: center; margin: 0 auto">
+            <span style="position: absolute">+Change avatar</span>
+            <a href="" ng-click="showLoadPic()" style="cursor: pointer">
+              <img id="pic" ng-src="{{avatar}}" class="img-circle" alt="User profile picture" style="height:200px; width:200px; text-align: center; border: 3px solid; border-color: #d2d6de">
+            </a>
+          </div>
 
-              <input id="input1" ng-show="showInput" style="margin-left: 44%; margin-top: 10px; margin-bottom: 10px" type="file" />
-              <a ng-click="cancelLoadPic()" style="margin-left: 42%" ng-show="showInput" id="editCancel1" class=" btn-sm btn-primary-bvr edit_profile"><i style="color: red" class="fa fa-times"></i>Cancel</a>
-              <a ng-show="showInput" id="editUpload2" ng-click="uploadPic()" class=" btn-sm btn-primary-bvr edit_profile"><i style="color: green" class="fa fa-check"></i>Upload</a>
+          <input id="input1" ng-show="showInput" style="margin-left: 44%; margin-top: 10px; margin-bottom: 10px" type="file" />
+          <a ng-click="cancelLoadPic()" style="margin-left: 42%" ng-show="showInput" id="editCancel1" class=" btn-sm btn-primary-bvr edit_profile"><i style="color: red" class="fa fa-times"></i>Cancel</a>
+          <a ng-show="showInput" id="editUpload2" ng-click="uploadPic()" class=" btn-sm btn-primary-bvr edit_profile"><i style="color: green" class="fa fa-check"></i>Upload</a>
 
 
-              <h3 class="profile-username text-center">{{name}}</h3>
+          <h3 class="profile-username text-center">{{name}}</h3>
 
-              <p class="text-muted text-center">{{occupation}}</p>
+          <p class="text-muted text-center">{{occupation}}</p>
 
-              <ul class="list-group list-group-unbordered">
-                <!-- <li class="list-group-item">
+          <ul class="list-group list-group-unbordered">
+            <!-- <li class="list-group-item">
                   <b>Followers</b> <a class="pull-right">{{followers.length}}</a>
                 </li>
                 <li class="list-group-item">
                   <b>Following</b> <a class="pull-right">{{following.length}}</a>
                 </li> -->
-                <li class="list-group-item">
-                  <a ui-sref="root.main.companyProfile.friends"> <b>Partners</b> <span class="pull-right">{{friends.length}}</span></a>
-                </li>
-                <li class="list-group-item">
-                  <a ui-sref="root.main.companyProfile.userAccounts"> <b>User accounts</b> <span class="pull-right">{{users.length}}</span></a>
-                </li>
-                <li ng-show="isMyProfile" class="list-group-item">
-                  <b>Devices</b> <span class="pull-right">{{devices}}</span>
-                </li>
-                <li ng-show="isMyProfile" class="list-group-item">
-                  <b>Services</b> <span class="pull-right">{{services}}</span>
-                </li>
-              </ul>
+            <li class="list-group-item">
+              <a ui-sref="root.main.companyProfile.friends"> <b>Partners</b> <span class="pull-right">{{friends.length}}</span></a>
+            </li>
+            <li class="list-group-item">
+              <a ui-sref="root.main.companyProfile.userAccounts"> <b>User accounts</b> <span class="pull-right">{{users.length}}</span></a>
+            </li>
+            <li ng-show="isMyProfile" class="list-group-item">
+              <b>Devices</b> <span class="pull-right">{{devices}}</span>
+            </li>
+            <li ng-show="isMyProfile" class="list-group-item">
+              <b>Services</b> <span class="pull-right">{{services}}</span>
+            </li>
+          </ul>
 
-              <!-- Align button correctly -->
-              <div class="btn-group btn-block" ng-show="canAnswerNeighbourRequest">
-                <button type="button" class="btn col-lg-10 btn-success " ng-click="acceptNeighbourRequest()">
-                  <i class="fa fa-check-circle-o"></i>&nbsp;<b>Accept partnership request</b></button>
-                <button type="button" class="btn col-lg-2 btn-success dropdown-toggle" data-toggle="dropdown">
-                  <span class="caret"></span>
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a ng-click="acceptNeighbourRequest()"><i class="fa fa-check-circle-o"></i>&nbsp;Accept</a></li>
-                  <li><a ng-click="rejectNeighbourRequest()"><i class="fa fa-times-circle-o"></i>&nbsp;Reject</a></li>
-                </ul>
-              </div>
-              <a class="btn btn-primary btn-block" ng-show="canSendNeighbourRequest"
-                 ng-click="sendNeighbourRequest()"><i class="fa fa-user-plus"></i>&nbsp;<b>Send partnership request</b></a>
-              <a class="btn btn-default btn-block" ng-show="canCancelNeighbourRequest"
-                 ng-click="cancelNeighbourRequest()"><i class="fa fa-user-plus"></i>&nbsp;<b>Cancel partnership request</b></a>
-              <a class="btn btn-default btn-block" ng-show="isNeighbour"
-                ng-click="cancelNeighbourship()"><i class="fa fa-user-times"></i>&nbsp;<b>Cancel partnership</b></a>
-              <!-- <a href="#" class="btn btn-primary btn-block" ng-hide="isMyProfile"><i class="fa fa-star-o"></i>&nbsp;<b>Follow</b></a> -->
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-
-          <!-- About Me Box -->
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-
-              <strong><i class="fa fa-university margin-r-5"></i> Organisation</strong><br>
-                <p class="text-muted">{{name}}</p>
-              <hr>
-
-              <strong><i class="fa fa-list-alt margin-r-5"></i> BID</strong>
-                <p class="text-muted">{{bid}}</p>
-              <hr>
-
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-                <a ng-show="imAdmin" ng-click="locEdit()" id="loc2" class="pull-right btn-sm btn-info edit_profile">Edit</a>
-                <a id="loc4" ng-click="locSave()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: green" class="fa fa-check"></i>Save</a>
-                <a id="loc5" ng-click="locCancel()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: red" class="fa fa-times"></i>Cancel</a>
-                <p class="text-muted" id="loc1">{{location}}</p>
-                <input id="loc3" style="display: block; margin-top: 5px; margin-left: 0px" class="style-1" type="text" ng-model="locationNew"/>
-              <hr>
-
-              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-                <a ng-show="imAdmin" ng-click="notEdit()" id="not2" class="pull-right btn-sm btn-info edit_profile">Edit</a>
-                <a id="not4" ng-click="notSave()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: green" class="fa fa-check"></i>Save</a>
-                <a id="not5" ng-click="notCancel()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: red" class="fa fa-times"></i>Cancel</a>
-                <textarea id="not3" rows="4" cols="40" style="display: block; margin-top: 5px; margin-left: 0px" class="style-1" type="text" ng-model="notesNew"></textarea>
-              <p id="not1">{{notes}}</p>
-
-              <hr ng-show="isMyProfile">
-
-              <strong ng-show="isMyProfile"><i class="fa fa-cog margin-r-5"></i> Theme color</strong>
-
-              <select ng-show="isMyProfile" id="editThemeColor" name="menu" class="pull-right">
-                <option value="none" selected>Change color to:</option>
-                <option value="red">Red</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="yellow">Yellow</option>
-                <option value="purple">Purple</option>
-                <option value="black">Black & White</option>
-              </select>
-
-              <hr ng-show="isMyProfile">
-
-              <strong ng-show="imAdmin"><i class="fa fa-exclamation-triangle margin-r-5"></i> Remove organisation</strong>
-
-              <a ng-show="imAdmin" ng-click="removeOrg()" class="pull-right btn-sm btn-danger" style="margin-left: 5px"> Delete </a>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-        <div class="col-md-9" ng-show="loaded">
-          <div class="nav-tabs-custom">
-                       <!-- Nav tabs -->
-            <ul class="nav nav-tabs">
-              <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.devices"><i class="fa fa-clone"></i>&nbsp;Devices</a></li>
-              <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.services"><i class="fa fa-cloud"></i>&nbsp;Services</a></li>
-              <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.friends"><i class="fa fa-users"></i>&nbsp;Partners</a></li>
-              <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.history"><i class="fa fa-clock-o"></i>&nbsp;History</a></li>
-              <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.userAccounts"><i class="fa fa-user"></i>&nbsp;User accounts</a></li>
-              <li ng-show="imAdmin" ui-sref-active="active"><a ui-sref="root.main.companyProfile.roleMgmt"><i class="fa fa-lock"></i>&nbsp;Role management</a></li>
+          <!-- Align button correctly -->
+          <div class="btn-group btn-block" ng-show="canAnswerNeighbourRequest">
+            <button type="button" class="btn col-lg-10 btn-success " ng-click="acceptNeighbourRequest()">
+              <i class="fa fa-check-circle-o"></i>&nbsp;<b>Accept partnership request</b></button>
+            <button type="button" class="btn col-lg-2 btn-success dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a ng-click="acceptNeighbourRequest()"><i class="fa fa-check-circle-o"></i>&nbsp;Accept</a></li>
+              <li><a ng-click="rejectNeighbourRequest()"><i class="fa fa-times-circle-o"></i>&nbsp;Reject</a></li>
             </ul>
-            <!-- Tab panes -->
-            <div class="tab-content" ui-view="tabPanel">
-            </div>
           </div>
+          <a class="btn btn-primary btn-block" ng-show="canSendNeighbourRequest" ng-click="sendNeighbourRequest()"><i class="fa fa-user-plus"></i>&nbsp;<b>Send partnership request</b></a>
+          <a class="btn btn-default btn-block" ng-show="canCancelNeighbourRequest" ng-click="cancelNeighbourRequest()"><i class="fa fa-user-plus"></i>&nbsp;<b>Cancel partnership request</b></a>
+          <a class="btn btn-default btn-block" ng-show="isNeighbour" ng-click="cancelNeighbourship()"><i class="fa fa-user-times"></i>&nbsp;<b>Cancel partnership</b></a>
+          <!-- <a href="#" class="btn btn-primary btn-block" ng-hide="isMyProfile"><i class="fa fa-star-o"></i>&nbsp;<b>Follow</b></a> -->
         </div>
-
+        <!-- /.box-body -->
       </div>
+      <!-- /.box -->
+
+      <!-- About Me Box -->
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">About Me</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+          <strong><i class="fa fa-university margin-r-5"></i> Organisation</strong><br>
+          <p class="text-muted">{{name}}</p>
+          <hr>
+
+          <strong><i class="fa fa-list-alt margin-r-5"></i> BID</strong>
+          <p class="text-muted">{{bid}}</p>
+          <hr>
+
+          <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+          <a ng-show="imAdmin" ng-click="locEdit()" id="loc2" class="pull-right btn-sm btn-info edit_profile">Edit</a>
+          <a id="loc4" ng-click="locSave()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: green" class="fa fa-check"></i>Save</a>
+          <a id="loc5" ng-click="locCancel()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: red" class="fa fa-times"></i>Cancel</a>
+          <p class="text-muted" id="loc1">{{location}}</p>
+          <input id="loc3" style="display: block; margin-top: 5px; margin-left: 0px" class="style-1" type="text" ng-model="locationNew" />
+          <hr>
+
+          <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
+          <a ng-show="imAdmin" ng-click="notEdit()" id="not2" class="pull-right btn-sm btn-info edit_profile">Edit</a>
+          <a id="not4" ng-click="notSave()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: green" class="fa fa-check"></i>Save</a>
+          <a id="not5" ng-click="notCancel()" style="display: block; margin-top: 5px; margin-left: 2px" class="pull-right btn-sm btn-info edit_profile"><i style="color: red" class="fa fa-times"></i>Cancel</a>
+          <textarea id="not3" rows="4" cols="40" style="display: block; margin-top: 5px; margin-left: 0px" class="style-1" type="text" ng-model="notesNew"></textarea>
+          <p id="not1">{{notes}}</p>
+
+          <hr ng-show="isMyProfile">
+
+          <strong ng-show="isMyProfile"><i class="fa fa-cog margin-r-5"></i> Theme color</strong>
+
+          <select ng-show="isMyProfile" id="editThemeColor" name="menu" class="pull-right">
+            <option value="none" selected>Change color to:</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+            <option value="purple">Purple</option>
+            <option value="black">Black & White</option>
+          </select>
+
+          <hr ng-show="isMyProfile">
+
+          <strong ng-show="imAdmin"><i class="fa fa-exclamation-triangle margin-r-5"></i> Remove organisation</strong>
+
+          <a ng-show="imAdmin" ng-click="removeOrg()" class="pull-right btn-sm btn-danger" style="margin-left: 5px"> Delete </a>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+    <div class="col-md-9" ng-show="loaded">
+      <div class="nav-tabs-custom">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+          <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.devices"><i class="fa fa-clone"></i>&nbsp;Devices</a></li>
+          <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.services"><i class="fa fa-cloud"></i>&nbsp;Services</a></li>
+          <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.friends"><i class="fa fa-users"></i>&nbsp;Partners</a></li>
+          <li ui-sref-active="active" ng-show="isMyProfile"><a ui-sref="root.main.companyProfile.history"><i class="fa fa-clock-o"></i>&nbsp;History</a></li>
+          <li ui-sref-active="active"><a ui-sref="root.main.companyProfile.userAccounts"><i class="fa fa-user"></i>&nbsp;User accounts</a></li>
+          <li ng-show="imAdmin" ui-sref-active="active"><a ui-sref="root.main.companyProfile.roleMgmt"><i class="fa fa-lock"></i>&nbsp;Role management</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content" ui-view="tabPanel">
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
