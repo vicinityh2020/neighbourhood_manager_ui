@@ -1,6 +1,10 @@
 #!/bin/sh
 usage="$(basename "$0") [-h] [-p port -e env -d dns_name]
  -- Builds vcnt-ui docker
+ -- Examples
+ -- Production: ./run.sh -p 80 -e prod -d www.example.com
+ -- Development: ./run.sh -p 8888 -e dev -d www.example.com
+ -- Local: ./run.sh [ -p XXXX ]
 
 where:
     -h  shows help
@@ -40,6 +44,7 @@ cp docker/nginx.${ENV}.conf nginx.conf
 cp docker/Dockerfile.${ENV} Dockerfile
 cp app/envs/env_${ENV}.js app/env.js
 # Docker build
+npm install
 docker build -f Dockerfile -t nm-ui .
 # CREATE LOCAL FOLDERS
 mkdir -p ~/docker_data/logs/nginx
