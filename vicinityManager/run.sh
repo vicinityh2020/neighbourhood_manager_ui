@@ -1,42 +1,43 @@
 #!/bin/bash
-usage="$(basename "$0") [-h] [-e env -d dns_name -w workdir -p local_port -n app_name -a api_url -b base_href]
+usage="$(basename "$0") [-h] [-e env -p web_port -b web_dns -q api_port -a api_dns -n app_name -w workdir ]
 -- Builds vcnt-ui docker
  -- Examples
- -- Production: ./run.sh -e prod -d www.example.com -a https://my.server.com:PORT -b https://my.ui.com
- -- Development: ./run.sh -e dev -d www.example.com -a localhost:3000 -b localhost:8080
+ -- Production: ./run.sh -s -e prod -a my.server.com:PORT -b my.ui.com
+ -- Development: ./run.sh -e dev -a localhost:3000 -b localhost:8080
  -- Local: ./run.sh [ without arguments, access on localhost:8080 ]
 
 where:
     -h  shows help
+    -s  enables ssl [ Without arguments ]
     -e  environment [prod, dev, local (default)]
+    -p  web port [8080 (default)]
+    -q  api server port [3000 (default)]
+    -b  web dns [localhost (default)]
+    -a  api dns [localhost (default)]
     -w  workdir [~/vicinity_nm_ui (default)]
-    -p  local mode port [8080 (default)]
-    -n  app name [nm-ui (default)]
-    -d  dns name"
+    -n  app name [nm-ui (default)]"
 
 # Default configuration
-PORT=8080
+SSL=false
+WEB_DNS="localhost"
+WEB_PORT=8080
+API_DNS="localhost"
+API_PORT=3000
 ENV="local"
-DOMAIN=false
 WORKDIR=false
 NAME="nm-ui"
-API_URL="localhost:3000"
-BASE_HREF="localhost:8080"
 
 # Get configuration
-while getopts 'hd:d:e:w:n:a:b:' option; do
+while getopts 'hd:sd:p:q:e:w:n:a:b:' option; do
   case "$option" in
     h) echo "$usage"
       exit
       ;;
+    s)
+      SSL=true
+      ;;
     e)
       ENV="$OPTARG"
-      ;;
-    p)
-      PORT="$OPTARG"
-      ;;
-    d)
-      DOMAIN="$OPTARG"
       ;;
     w)
       WORKDIR="$OPTARG"
@@ -45,10 +46,16 @@ while getopts 'hd:d:e:w:n:a:b:' option; do
       NAME="$OPTARG"
       ;;
     a)
-      API_URL="$OPTARG"
+      API_DNS="$OPTARG"
       ;;
     b)
-      BASE_HREF="$OPTARG"
+      WEB_DNS="$OPTARG"
+      ;;
+    p)
+      WEB_PORT="$OPTARG"
+      ;;
+    q)
+      API_PORT="$OPTARG"
       ;;
   esac
 done
@@ -58,14 +65,30 @@ if [ ${WORKDIR} == false ]; then
   WORKDIR=~/vicinity_nm_ui/vicinityManager
 fi
 
+# Build full URL
+API_URL=${API_DNS}${API_PORT}
+WEB_URL=${WEB_DNS}${WEB_PORT}
+if [ ${WEB_PORT} == 80 ]; then
+  WEB_URL=${WEB_DNS}
+fi
+if [ ${API_PORT} == 80 ]; then
+  API_URL=${API_DNS}
+fi
+
+
 # CLEAN OLD BUILD
 docker kill ${NAME} >/dev/null 2>&1
 docker rm ${NAME} >/dev/null 2>&1
 docker rmi ${NAME} >/dev/null 2>&1
-# Copy relevant files based on ENV
-cp ${WORKDIR}/docker/nginx.${ENV}.conf nginx.conf
+# Update nginx conf
+if [ ${SSL} == true ]; then
+  cat ${WORKDIR}/docker/nginx.ssl.conf | sed 's/#b#/'${WEB_DNS}'/' > ${WORKDIR}/aux
+else
+  cat ${WORKDIR}/docker/nginx.nossl.conf | sed 's/#b#/'${WEB_DNS}'/' > ${WORKDIR}/aux
+fi
+mv ${WORKDIR}/aux ${WORKDIR}/nginx.conf
 # Update env file
-cat ${WORKDIR}/app/envs/env.js | sed 's/#a#/'${API_URL}'/' | sed 's/#b#/'${BASE_HREF}'/' > ${WORKDIR}/aux
+cat ${WORKDIR}/app/envs/env.js | sed 's/#a#/'${API_URL}'/' | sed 's/#b#/'${WEB_URL}'/' > ${WORKDIR}/aux
 mv ${WORKDIR}/aux ${WORKDIR}/app/env.js
 # Docker build
 npm install
@@ -74,14 +97,14 @@ docker build -f ${WORKDIR}/Dockerfile -t ${NAME} ${WORKDIR}
 mkdir -p ~/docker_data/logs/nginx
 # RUN
 if [ "${ENV}" == "local" ] ; then
-  echo "Running in local mode, in port ${PORT}"
-  docker run -d -p ${PORT}:80 \
+  echo "Running in local mode, in port ${WEB_PORT}"
+  docker run -d -p ${WEB_PORT}:80 \
           --name ${NAME} \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
           ${NAME}:latest
-elif [ "${DOMAIN}" == false ] ; then
+elif [ "${SSL}" == false ] || [ "${WEB_DNS}" == "localhost" ]; then
   echo "Missing DNS name, running non-SSL mode"
-  docker run -d -p 80:80 \
+  docker run -d -p ${WEB_PORT}:80 \
           --name ${NAME} \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
           ${NAME}:latest
@@ -89,8 +112,8 @@ else
   echo "Configuration complete, running SSL mode"
   docker run -d -p 443:443 -p 80:80 \
           --name ${NAME} \
-          --mount type=bind,source=/etc/letsencrypt/live/${DOMAIN}/privkey.pem,target=/var/certificates/privkey.pem,readonly \
-          --mount type=bind,source=/etc/letsencrypt/live/${DOMAIN}/fullchain.pem,target=/var/certificates/fullchain.pem,readonly \
+          --mount type=bind,source=/etc/letsencrypt/live/${WEB_DNS}/privkey.pem,target=/var/certificates/privkey.pem,readonly \
+          --mount type=bind,source=/etc/letsencrypt/live/${WEB_DNS}/fullchain.pem,target=/var/certificates/fullchain.pem,readonly \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
           ${NAME}:latest
 fi
