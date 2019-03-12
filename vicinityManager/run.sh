@@ -1,9 +1,9 @@
 #!/bin/bash
-usage="$(basename "$0") [-h] [-e env -d dns_name -w workdir -p local_port -n app_name]
+usage="$(basename "$0") [-h] [-e env -d dns_name -w workdir -p local_port -n app_name -a api_url -b base_href]
 -- Builds vcnt-ui docker
  -- Examples
- -- Production: ./run.sh -e prod -d www.example.com
- -- Development: ./run.sh -e dev -d www.example.com
+ -- Production: ./run.sh -e prod -d www.example.com -a https://my.server.com:PORT -b https://my.ui.com
+ -- Development: ./run.sh -e dev -d www.example.com -a localhost:3000 -b localhost:8080
  -- Local: ./run.sh [ without arguments, access on localhost:8080 ]
 
 where:
@@ -20,9 +20,11 @@ ENV="local"
 DOMAIN=false
 WORKDIR=false
 NAME="nm-ui"
+API_URL="localhost:3000"
+BASE_HREF="localhost:8080"
 
 # Get configuration
-while getopts 'hd:d:e:w:' option; do
+while getopts 'hd:d:e:w:n:a:b:' option; do
   case "$option" in
     h) echo "$usage"
       exit
@@ -39,12 +41,21 @@ while getopts 'hd:d:e:w:' option; do
     w)
       WORKDIR="$OPTARG"
       ;;
+    n)
+      NAME="$OPTARG"
+      ;;
+    a)
+      API_URL="$OPTARG"
+      ;;
+    b)
+      BASE_HREF="$OPTARG"
+      ;;
   esac
 done
 
 # Set WORKDIR
 if [ ${WORKDIR} == false ]; then
-  WORKDIR=~/vicinity_nm_ui
+  WORKDIR=~/vicinity_nm_ui/vicinityManager
 fi
 
 # CLEAN OLD BUILD
@@ -52,8 +63,10 @@ docker kill ${NAME} >/dev/null 2>&1
 docker rm ${NAME} >/dev/null 2>&1
 docker rmi ${NAME} >/dev/null 2>&1
 # Copy relevant files based on ENV
-cp docker/nginx.${ENV}.conf nginx.conf
-cp app/envs/env_${ENV}.js app/env.js
+cp ${WORKDIR}/docker/nginx.${ENV}.conf nginx.conf
+# Update env file
+cat ${WORKDIR}/app/envs/env.js | sed 's/#a#/'${API_URL}'/' | sed 's/#b#/'${BASE_HREF}'/' > ${WORKDIR}/aux
+mv ${WORKDIR}/aux ${WORKDIR}/app/env.js
 # Docker build
 npm install
 docker build -f ${WORKDIR}/Dockerfile -t ${NAME} ${WORKDIR}
