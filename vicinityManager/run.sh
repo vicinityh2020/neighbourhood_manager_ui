@@ -115,11 +115,11 @@ if [ "${ENV}" == "local" ] ; then
           --name ${NAME} \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
           ${NAME}:latest
-elif [ "${SSL}" == true ] || [ "${WEB_DNS}" == "localhost" ]; then
+elif [ "${SSL}" == true ] && [ "${WEB_DNS}" == "localhost" ]; then
   echo "Not possible to have SSL connection without a valid DNS"
   exit 1
 elif [ "${SSL}" == false ] || [ "${WEB_DNS}" == "localhost" ]; then
-  echo "Missing DNS name, running non-SSL mode"
+  echo "Running non-SSL mode"
   docker run -d -p ${WEB_PORT}:80 \
           --name ${NAME} \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
