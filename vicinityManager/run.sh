@@ -1,5 +1,5 @@
 #!/bin/bash
-usage="$(basename "$0") [-h] [-e env -p web_port -b web_dns -q api_port -a api_dns -n app_name -w workdir ]
+usage="$(basename "$0") [-h -s] [-e env -p web_port -b web_dns -q api_port -a api_dns -n app_name -w workdir ]
 -- Builds vcnt-ui docker
  -- Examples
  -- Production: ./run.sh -s -e prod -a my.server.com:PORT -b my.ui.com
@@ -14,7 +14,7 @@ where:
     -q  api server port [3000 (default)]
     -b  web dns [localhost (default)]
     -a  api dns [localhost (default)]
-    -w  workdir [~/vicinity_nm_ui (default)]
+    -w  workdir [ ~ (default)]
     -n  app name [nm-ui (default)]"
 
 # Default configuration
@@ -63,35 +63,48 @@ done
 # Set WORKDIR
 if [ ${WORKDIR} == false ]; then
   WORKDIR=~/vicinity_nm_ui/vicinityManager
+else
+  WORKDIR=${WORKDIR}/vicinity_nm_ui/vicinityManager
 fi
 
 # Build full URL
-API_URL=${API_DNS}${API_PORT}
-WEB_URL=${WEB_DNS}${WEB_PORT}
-if [ ${WEB_PORT} == 80 ]; then
-  WEB_URL=${WEB_DNS}
+if [ ${ENV} == "local" ]; then
+  API_URL=localhost:${API_PORT}
+  WEB_URL=localhost:${WEB_PORT}
+else
+  API_URL=${API_DNS}:${API_PORT}
+  WEB_URL=${WEB_DNS}:${WEB_PORT}
+  if [ ${WEB_PORT} == 80 ]; then
+    WEB_URL=${WEB_DNS}
+  fi
+  if [ ${API_PORT} == 80 ]; then
+    API_URL=${API_DNS}
+  fi
 fi
-if [ ${API_PORT} == 80 ]; then
-  API_URL=${API_DNS}
-fi
-
 
 # CLEAN OLD BUILD
 docker kill ${NAME} >/dev/null 2>&1
 docker rm ${NAME} >/dev/null 2>&1
-docker rmi ${NAME} >/dev/null 2>&1
+#docker rmi ${NAME} >/dev/null 2>&1
+
 # Update nginx conf
 if [ ${SSL} == true ]; then
   cat ${WORKDIR}/docker/nginx.ssl.conf | sed 's/#b#/'${WEB_DNS}'/' > ${WORKDIR}/aux
+  PROTOCOL="https"
 else
   cat ${WORKDIR}/docker/nginx.nossl.conf | sed 's/#b#/'${WEB_DNS}'/' > ${WORKDIR}/aux
+  PROTOCOL="http"
 fi
 mv ${WORKDIR}/aux ${WORKDIR}/nginx.conf
 # Update env file
-cat ${WORKDIR}/app/envs/env.js | sed 's/#a#/'${API_URL}'/' | sed 's/#b#/'${WEB_URL}'/' > ${WORKDIR}/aux
+cat ${WORKDIR}/app/envs/env.js \
+	| sed 's/#a#/'${API_URL}'/' \
+  | sed 's/#b#/'${WEB_URL}'/' \
+	| sed 's/#c#/'${PROTOCOL}'/' \
+	> ${WORKDIR}/aux
 mv ${WORKDIR}/aux ${WORKDIR}/app/env.js
 # Docker build
-npm install
+cd ${WORKDIR} && npm install
 docker build -f ${WORKDIR}/Dockerfile -t ${NAME} ${WORKDIR}
 # CREATE LOCAL FOLDERS
 mkdir -p ~/docker_data/logs/nginx
@@ -102,6 +115,9 @@ if [ "${ENV}" == "local" ] ; then
           --name ${NAME} \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
           ${NAME}:latest
+elif [ "${SSL}" == true ] || [ "${WEB_DNS}" == "localhost" ]; then
+  echo "Not possible to have SSL connection without a valid DNS"
+  exit 1
 elif [ "${SSL}" == false ] || [ "${WEB_DNS}" == "localhost" ]; then
   echo "Missing DNS name, running non-SSL mode"
   docker run -d -p ${WEB_PORT}:80 \
