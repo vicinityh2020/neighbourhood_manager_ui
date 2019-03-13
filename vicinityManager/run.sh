@@ -104,6 +104,7 @@ cat ${WORKDIR}/app/envs/env.js \
 	> ${WORKDIR}/aux
 mv ${WORKDIR}/aux ${WORKDIR}/app/env.js
 # Docker build
+cd ${WORKDIR} && bower install -F
 cd ${WORKDIR} && npm install
 docker build -f ${WORKDIR}/Dockerfile -t ${NAME} ${WORKDIR}
 # CREATE LOCAL FOLDERS
