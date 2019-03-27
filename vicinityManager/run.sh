@@ -63,15 +63,15 @@ done
 # Set WORKDIR
 if [ ${WORKDIR} == false ]; then
   WORKDIR=~/vicinity_nm_ui/vicinityManager
-else
-  WORKDIR=${WORKDIR}/vicinity_nm_ui/vicinityManager
+# else
+#   WORKDIR=${WORKDIR}/vicinity_nm_ui/vicinityManager
 fi
 
 # Build full URL
-if [ ${ENV} == "local" ]; then
-  API_URL=localhost:${API_PORT}
-  WEB_URL=localhost:${WEB_PORT}
-else
+# if [ ${ENV} == "local" ]; then
+#   API_URL=localhost:${API_PORT}
+#   WEB_URL=localhost:${WEB_PORT}
+# else
   API_URL=${API_DNS}:${API_PORT}
   WEB_URL=${WEB_DNS}:${WEB_PORT}
   if [ ${WEB_PORT} == 80 ]; then
@@ -80,7 +80,7 @@ else
   if [ ${API_PORT} == 80 ]; then
     API_URL=${API_DNS}
   fi
-fi
+# fi
 
 # CLEAN OLD BUILD
 docker kill ${NAME} >/dev/null 2>&1
@@ -104,8 +104,10 @@ cat ${WORKDIR}/app/envs/env.js \
 	> ${WORKDIR}/aux
 mv ${WORKDIR}/aux ${WORKDIR}/app/env.js
 # Docker build
-cd ${WORKDIR} && bower install -F
-cd ${WORKDIR} && npm install
+if [ ${ENV} != "local" ]; then
+  cd ${WORKDIR} && bower install -F
+  cd ${WORKDIR} && npm install
+fi
 docker build -f ${WORKDIR}/Dockerfile -t ${NAME} ${WORKDIR}
 # CREATE LOCAL FOLDERS
 mkdir -p ~/docker_data/logs/nginx

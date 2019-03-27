@@ -168,15 +168,15 @@ Back to top - Arrow
 Logos
 */
 img.widget-logo-shq{
-  max-width:20%;
-  max-height:20%;
-  background-color:white
+  max-width:50%;
+  max-height:50%;
+  background-color:transparent
 }
 
 img.widget-logo-vcnt{
-  max-width:20%;
-  max-height:20%;
-  background-color:white
+  max-width:50%;
+  max-height:50%;
+  background-color:transparent
 }
 
 img.node-logo{
@@ -1330,6 +1330,12 @@ li.notifications-menu ul.menu > li div.notification-avatar img {
 .bg-user {
   color: green;
   background-color: #C88141 !important;
+  /*#6531CC    #C88141*/
+}
+
+.bg-yellow {
+  background-color: yellow;
+  /* background-color: #EFCC66 !important; */
   /*#6531CC    #C88141*/
 }
 

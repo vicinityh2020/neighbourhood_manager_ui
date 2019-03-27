@@ -5,13 +5,8 @@
 <section class="content">
 
   <!-- Filter -->
-  <div class="panel panel-primary">
-    <p class="panel-heading">
-      <b>FILTERS</b>
-      <a class="pull-right" ng-show="isCollapsed" ng-click="collapseFlag()" data-toggle="collapse" data-target="#lvl_filters"><i style="color:white" class="fa fa-plus-square fa-2x"></i></a>
-      <a class="pull-right" ng-show="!isCollapsed" ng-click="collapseFlag()" data-toggle="collapse" data-target="#lvl_filters"><i style="color:white" class="fa fa-minus-square fa-2x"></i></a>
-    </p>
-    <div id="lvl_filters" class="collapse">
+  <div class="row">
+    <div class="col-sm-9">
     <div class="dropdown" style="margin: 10px">
       <a ui-sref="root.main.allDevices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Visibility and access rights
         <span class="caret"></span>
@@ -29,6 +24,7 @@
          <li><a ng-click="filterItems(7)" ui-sref="root.main.allDevices">All {{typeOfItem}}</a></li>
       </ul>
      </div>
+
      <div class="dropdown" style="margin: 10px">
        <a ui-sref="root.main.allDevices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Device types
          <span class="caret"></span>
@@ -38,67 +34,134 @@
        </ul>
       </div>
     </div>
+
+    <div align="right" class="col-sm-3" ng-if="!imMobile">
+      <button class="btn-xs btn-primary" ng-click="changeView()" ng-disabled="!listView"><i class="fa fa-th-large fa-lg"></i></button>
+      <button class="btn-xs btn-primary" ng-click="changeView()" ng-disabled="listView"><i class="fa fa-list fa-lg"></i></button>
+    </div>
   </div>
 
 <!-- Start -->
-  <div class="row" ng-show="loadedPage">
+  <div ng-show="loadedPage">
 
     <!-- onlyPrivateDevices -->
     <div ng-show="noItems" >
        <h2 style="margin-left:20px;">No {{typeOfItem}} found for the current selection...</h2>
    </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-repeat="dev in devs | nameFilter:searchTerm">
-      <!-- Widget: user widget style 1 -->
-      <div class="box box-widget widget-user-2">
-        <!-- Add the bg color to the header using any of the bg-* classes -->
-        <div style="z-index: -2" class="widget-user-header2 bg-yellow">
+   <div class="row" ng-if="!listView || imMobile">
+     <div class="col-lg-4" ng-repeat="dev in devs | nameFilter:searchTerm">
+       <!-- WIDGET -->
 
-          <div class="round">
-            <img style="cursor: pointer" onmouseover="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})" ng-src="{{dev.avatar}}" alt="Company Avatar">
-          </div>
+       <div class="small-box bg-yellow">
+         <div class="inner">
 
-          <div class="tooltip2" id="circle_gray" style="cursor:default"> &nbsp; &nbsp; &nbsp;
-            <span class=" tooltiptext2" > Unknown </span>
-          </div>
+           <!-- IMAGE AND TOOLTIP -->
+           <div class="tooltip2" id="circle_gray" style="cursor:default"> &nbsp; &nbsp; &nbsp;
+             <span class="tooltiptext2"> Unknown </span>
+           </div>
+           <div class="round">
+             <img style="cursor: pointer" onmouseover="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})" ng-src="{{dev.avatar}}" alt="Company Avatar">
+           </div>
 
-          <h3 class="widget-user-username2"><a style="color: #FFF; z-index: -1" href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})">{{dev.name}}</a></h3>
-          <h5 class="widget-user-desc2"><a style="text-decoration: underline; color: #FFF" href="" ui-sref="root.main.companyProfile.devices({companyAccountId: dev.cid.id._id})">{{dev.cid.id.name}}</a></h5>
-          <h5 class="widget-user-desc2" ng-show="dev.status === 'enabled'">Enabled</h5>
-          <h5 class="widget-user-desc2" ng-show="dev.status === 'disabled'">Disabled</h5>
-          <h5 class="widget-user-desc2" ng-show="dev.isPublic">Device is public</h5>
-          <h5 class="widget-user-desc2" ng-show="dev.isFriendData">Access for friends</h5>
-          <h5 class="widget-user-desc2" ng-show="dev.isPrivate">Private data</h5>
-          <img ng-if="dev.adid.type === 'vcnt'" class="pull-right widget-logo-vcnt" src="img/logos/vcntlogo.png"/>
-          <img ng-if="dev.adid.type === 'shq'" class="pull-right widget-logo-shq" src="img/logos/shqlogo.png"/>
-        </div>
+           <!-- CONTENT -->
+           <div align="left">
+             <h4><a style="color: #000; z-index: -1" href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})">{{dev.name}}</a></h4>
+              <h5><a style="text-decoration: underline; color: #FFF" href="" ui-sref="root.main.companyProfile.devices({companyAccountId: dev.cid.id._id})">{{dev.cid.id.name}}</a></h5>
+           </div>
+           <hr>
+           <div class="row">
+             <div class="col-sm-6" align="left">
+               <h5 ng-if="dev.status === 'disabled'">{{dev.statusCaption}}</h5>
+               <h5 ng-if="dev.status !== 'disabled'">{{dev.privacyCaption}}</h5>
+             </div>
+             <div class="col-sm-6" align="right">
+               <img class="widget-logo-shq" ng-if="dev.adid.type === 'shq'" src="img/logos/shqlogo.png"/>
+               <img class="widget-logo-vcnt" ng-if="dev.adid.type === 'vcnt'" src="img/logos/vcntlogo.png"/>
+             </div>
+           </div>
+         </div>
 
-        <div class="widget-user-footer-moreinfo2 bg-gray" ng-show="!dev.isOwner && !dev.imFriend && !dev.isContracted">
+         <!-- FOOTER -->
+         <div class="small-box-footer">
+           <a class="btn-xs btn-secondary btn-block centered" ng-show="!dev.isOwner && !dev.imFriend && !dev.isContracted">
              <i class="fa fa-circle-thin fa-lg"></i>
               &nbsp;<b>Other's Device</b>
-        </div>
+           </a>
 
-        <div class="widget-user-footer-moreinfo2 bg-purple" ng-show="!dev.isOwner && dev.imFriend && !dev.isContracted" >
-          <i class="fa fa-circle fa-lg"></i>
-              &nbsp;<b>Friend's Device</b>
-        </div>
+           <a href="#" class="btn-xs btn-danger btn-block centered" ng-show="!dev.isOwner && dev.imFriend && !dev.isContracted">
+             <i class="fa fa-circle fa-lg"></i>
+                 &nbsp;<b>Friend's Device</b>
+           </a>
 
-        <div class="widget-user-footer-moreinfo2 bg-aqua" ng-show="dev.isOwner">
+           <a href="#" class="btn-xs btn-info btn-block centered" ng-show="dev.isOwner">
              <i class="fa fa-user fa-lg"></i>
               &nbsp;<b>My Device</b>
-        </div>
+           </a>
 
-        <div class="widget-user-footer-moreinfo2 bg-olive" ng-show="dev.isContracted">
+           <a href="#" class="btn-xs btn-success btn-block centered" ng-show="dev.isContracted">
              <i class="fa fa-link fa-lg"></i>
               &nbsp;<b>Contracted Device</b>
-        </div>
+           </a>
 
+           <a href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})" class="btn-xs btn-default btn-block centered" >
+             More info <i class="fa fa-arrow-circle-right"></i>
+           </a>
 
-        <a href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})" class="widget-user-footer-moreinfo" >More info <i class="fa fa-arrow-circle-right"></i></a>
-      </div>
+         </div>
+       </div>
+
+      <!-- END WIDGET -->
     </div>
+  </div>
+
+    <!-- LIST VIEW -->
+
+      <div class="box" ng-if="listView && !imMobile">
+        <div class="box-body">
+          <table id="RegTable" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Name<i ng-click="orderByMe('name')" class="fa fa-fw fa-sort"/></th>
+                <th>Organisation<i ng-click="orderByMe('organisation')" class="fa fa-fw fa-sort"/></th>
+                <th>Status<i ng-click="orderByMe('status')" class="fa fa-fw fa-sort"/></th>
+                <th>Privacy<i ng-click="orderByMe('privacy')" class="fa fa-fw fa-sort"/></th>
+                <th>Adapter type<i ng-click="orderByMe('adapter')" class="fa fa-fw fa-sort"/></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="it in devs | orderBy:myOrderBy:rev">
+                <td class="col-sm-3">
+                  <a style="color: #000; z-index: -1" href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: it._id})">{{it.name}}</a>
+                </td>
+                <td class="col-sm-2">
+                  <a style="text-decoration: underline" href="" ui-sref="root.main.companyProfile.services({companyAccountId: it.cid.id._id})">{{it.cid.id.name}}</a>
+                </td>
+                <td class="col-sm-2">
+                  <span>{{it.statusCaption}}</span>
+                </td>
+                <td class="col-sm-2">
+                  <span>{{it.privacyCaption}}</span>
+                </td>
+                <td class="col-sm-1">
+                  <img ng-show="it.adid.type === 'vcnt'" class="node-logo" src="img/logos/vcntlogo.png"/>
+                  <img ng-show="it.adid.type === 'shq'" class="node-logo" src="img/logos/shqlogo.png"/>
+                </td>
+                <td class="col-sm-2">
+                  <div align="center">
+                    <a class="padded" href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: it._id})">
+                       <i class="fa fa-search fa-lg"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
   </div>
+  <!--END VIEW BLOCK -->
 
   <div class="coll-md-1" ng-hide="loaded" style="margin: auto; width:60%">
     <i class="fa fa-refresh fa-spin fa-4x" style="text-align: center; display: block"/>

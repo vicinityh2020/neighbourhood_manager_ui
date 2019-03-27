@@ -9,6 +9,11 @@ angular.module('VicinityManagerApp.controllers')
 // Ensure scroll on top onLoad
     $window.scrollTo(0, 0);
 
+    $scope.imMobile = Number($window.innerWidth) < 1000;
+    $(window).on('resize',function(){
+      $scope.imMobile = Number($window.innerWidth) < 1000;
+    });
+
 // Initialize variables and get initial data =============
 
    $scope.devs=[];
@@ -27,6 +32,7 @@ angular.module('VicinityManagerApp.controllers')
    $scope.itemType = "all"; // Store user selection
    $scope.ontologyTypes = {}; // Store ontology types
    $scope.itemFilter = {};
+   $scope.listView = false;
 
    init();
 
@@ -35,7 +41,7 @@ angular.module('VicinityManagerApp.controllers')
       itemsAPIService.getAllItems($scope.myId, "device", $scope.offset, $scope.filterNumber, ["all"])
       .then(function(response){
         for(var i = 0; i < response.data.message.length; i++){
-            $scope.devs.push(response.data.message[i]);
+            $scope.devs.push(addCaption(response.data.message[i]));
         }
         $scope.noItems = ($scope.devs.length === 0);
         $scope.allItemsLoaded = response.data.message.length < 12;
@@ -63,7 +69,7 @@ angular.module('VicinityManagerApp.controllers')
      itemsAPIService.getAllItems($scope.myId, "device", $scope.offset, $scope.filterNumber, addSubclasses($scope.itemType))
      .then(function(response){
        for(var i = 0; i < response.data.message.length; i++){
-           $scope.devs.push(response.data.message[i]);
+           $scope.devs.push(addCaption(response.data.message[i]));
        }
        $scope.noItems = ($scope.devs.length === 0);
        $scope.allItemsLoaded = response.data.message.length < 12;
@@ -208,6 +214,15 @@ angular.module('VicinityManagerApp.controllers')
    }
  }
 
+ // Add caption based on item status and privacy
+ function addCaption(item){
+   item.statusCaption = item.status === 'enabled' ? "Enabled" : "Disabled";
+   if(item.isPublic){ item.privacyCaption = 'Device is public';}
+   else if(item.isFriendData){ item.privacyCaption = 'Access for friends'; }
+   else{ item.privacyCaption = 'Private data'; }
+   return item;
+ }
+
   // Trigers load of more items
   $scope.loadMore = function(){
       $scope.loaded = false;
@@ -215,8 +230,8 @@ angular.module('VicinityManagerApp.controllers')
       init();
   };
 
-  $scope.collapseFlag = function(){
-    $scope.isCollapsed = !($scope.isCollapsed);
+  $scope.changeView = function(){
+    $scope.listView = !($scope.listView);
   };
 
 });
