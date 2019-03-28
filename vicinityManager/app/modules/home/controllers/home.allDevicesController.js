@@ -33,6 +33,7 @@ angular.module('VicinityManagerApp.controllers')
    $scope.ontologyTypes = {}; // Store ontology types
    $scope.itemFilter = {};
    $scope.listView = false;
+   $scope.myOrderBy = 'name';
 
    init();
 
@@ -232,6 +233,17 @@ angular.module('VicinityManagerApp.controllers')
 
   $scope.changeView = function(){
     $scope.listView = !($scope.listView);
+  };
+
+  $scope.orderByMe = function(x) {
+    if($scope.myOrderBy === x){
+      $scope.rev=!($scope.rev);
+    }
+    $scope.myOrderBy = x;
+  };
+
+  $scope.onSort = function(order){
+    $scope.rev = order;
   };
 
 });

@@ -84,22 +84,22 @@
 
          <!-- FOOTER -->
          <div class="small-box-footer">
-           <a class="btn-xs btn-secondary btn-block centered" ng-show="!dev.isOwner && !dev.imFriend && !dev.isContracted">
+           <a ng-disabled="true" class="btn-xs btn-secondary btn-block centered" ng-show="!dev.isOwner && !dev.imFriend && !dev.isContracted">
              <i class="fa fa-circle-thin fa-lg"></i>
               &nbsp;<b>Other's Device</b>
            </a>
 
-           <a href="#" class="btn-xs btn-danger btn-block centered" ng-show="!dev.isOwner && dev.imFriend && !dev.isContracted">
+           <a ng-disabled="true" href="#" class="btn-xs btn-danger btn-block centered" ng-show="!dev.isOwner && dev.imFriend && !dev.isContracted">
              <i class="fa fa-circle fa-lg"></i>
                  &nbsp;<b>Friend's Device</b>
            </a>
 
-           <a href="#" class="btn-xs btn-info btn-block centered" ng-show="dev.isOwner">
+           <a ng-disabled="true" href="#" class="btn-xs btn-info btn-block centered" ng-show="dev.isOwner">
              <i class="fa fa-user fa-lg"></i>
               &nbsp;<b>My Device</b>
            </a>
 
-           <a href="#" class="btn-xs btn-success btn-block centered" ng-show="dev.isContracted">
+           <a ng-disabled="true" href="#" class="btn-xs btn-success btn-block centered" ng-show="dev.isContracted">
              <i class="fa fa-link fa-lg"></i>
               &nbsp;<b>Contracted Device</b>
            </a>
@@ -117,7 +117,7 @@
 
     <!-- LIST VIEW -->
 
-      <div class="box" ng-if="listView && !imMobile">
+      <div class="box" ng-if="listView && !imMobile && !noItems">
         <div class="box-body">
           <table id="RegTable" class="table table-bordered table-striped">
             <thead>

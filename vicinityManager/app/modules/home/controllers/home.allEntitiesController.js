@@ -3,7 +3,12 @@ angular.module('VicinityManagerApp.controllers').
   controller('allEntities', function ($scope, commonHelpers, searchAPIService, userAccountAPIService, $stateParams, $window, Notification) {
 
     // Ensure scroll on top onLoad
-        $window.scrollTo(0, 0);
+      $window.scrollTo(0, 0);
+
+      $scope.imMobile = Number($window.innerWidth) < 1000;
+      $(window).on('resize',function(){
+        $scope.imMobile = Number($window.innerWidth) < 1000;
+      });
 
     // Variables
     $scope.resultsList = [];
@@ -14,6 +19,8 @@ angular.module('VicinityManagerApp.controllers').
     $scope.entitiesCaption = "All organisations";
     $scope.myFriends = [];
     $scope.allItemsLoaded = false;
+    $scope.listView = false;
+    $scope.myOrderBy = 'name';
 
     // ====== Triggers window resize to avoid bug =======
     commonHelpers.triggerResize();
@@ -87,4 +94,18 @@ angular.module('VicinityManagerApp.controllers').
           init();
       };
 
+      $scope.changeView = function(){
+        $scope.listView = !($scope.listView);
+      };
+
+      $scope.orderByMe = function(x) {
+        if($scope.myOrderBy === x){
+          $scope.rev=!($scope.rev);
+        }
+        $scope.myOrderBy = x;
+      };
+
+      $scope.onSort = function(order){
+        $scope.rev = order;
+      };
   });

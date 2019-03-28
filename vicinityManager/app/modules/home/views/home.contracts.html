@@ -2,33 +2,28 @@
     <h1>{{contractsCaption}}</h1>
 </section>
 
-<div class="coll-md-1" ng-show="!loaded" style="margin: auto; width:60%">
+<div ng-show="!loaded" style="margin: auto; width:60%">
   <i class="fa fa-refresh fa-spin fa-4x" style="text-align: center; display: block"/>
 </div>
 
-<!-- /.box-header -->
-<div class="row">
-  <div class="col-sm-12">
-    <img class="pull-right" src="img/logos/shqlogo.png"/>
-  </div>
-</div>
-
-<br>
-
 <!-- Filter -->
-<div class="box-header with-border">
-  <div class="box-tools">
-    <div class="dropdown">
-      <a ui-sref="root.main.contracts" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter contracts
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-         <li><a ng-click="changeFilter(0)" ui-sref="root.main.contracts">All contracts</a></li>
-         <li><a ng-click="changeFilter(1)" ui-sref="root.main.contracts">My services</a></li>
-         <li><a ng-click="changeFilter(2)" ui-sref="root.main.contracts">Contracted services</a></li>
-         <li><a ng-click="changeFilter(3)" ui-sref="root.main.contracts">Pending approval</a></li>
-      </ul>
+<div class="row">
+  <div class="col-sm-3">
+    <br>
+    <div class="dropdown" style="margin: 20px">
+        <a ui-sref="root.main.contracts" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter contracts
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+           <li><a ng-click="changeFilter(0)" ui-sref="root.main.contracts">All contracts</a></li>
+           <li><a ng-click="changeFilter(1)" ui-sref="root.main.contracts">My services</a></li>
+           <li><a ng-click="changeFilter(2)" ui-sref="root.main.contracts">Contracted services</a></li>
+           <li><a ng-click="changeFilter(3)" ui-sref="root.main.contracts">Pending approval</a></li>
+        </ul>
      </div>
+  </div>
+  <div class="col-sm-9">
+    <img class="pull-right" src="img/logos/shqlogo.png"/>
   </div>
 </div>
 

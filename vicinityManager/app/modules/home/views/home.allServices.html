@@ -44,14 +44,15 @@
 
 <!-- WIDGET VIEW -->
 <div ng-show="loadedPage">
+
+  <!-- NOTHING TO SHOW -->
+  <div ng-show="noItems" >
+     <h2 style="margin-left:20px;">No {{typeOfItem}} found for the current selection...</h2>
+ </div>
+
   <div class="row" ng-if="!listView || imMobile">
 
-    <!-- NOTHING TO SHOW -->
-    <div ng-show="noItems" >
-       <h2 style="margin-left:20px;">No {{typeOfItem}} found for the current selection...</h2>
-   </div>
-
-    <div ng-show="loadedPage" class="col-lg-4" ng-repeat="it in items | nameFilter:searchTerm">
+    <div class="col-lg-4" ng-repeat="it in items | nameFilter:searchTerm">
 
       <!-- WIDGET -->
       <div class="small-box bg-teal">
@@ -90,7 +91,7 @@
             <i class="fa fa-plus fa-lg"></i>
              &nbsp;<b>Request service</b>
           </a>
-          <a href="#" class="btn-xs btn-info btn-block centered" ng-show="it.isOwner">
+          <a href="#" ng-disabled="true" class="btn-xs btn-info btn-block centered" ng-show="it.isOwner">
             <i class="fa fa-user fa-lg"></i>
              &nbsp;<b>My service</b>
           </a>
@@ -106,16 +107,16 @@
 
 <!-- LIST VIEW -->
 
-  <div class="box" ng-if="listView && !imMobile">
+  <div class="box" ng-if="listView && !imMobile && !noItems">
     <div class="box-body">
       <table id="RegTable" class="table table-bordered table-striped">
         <thead>
           <tr>
             <th>Name<i ng-click="orderByMe('name')" class="fa fa-fw fa-sort"/></th>
             <th>Organisation<i ng-click="orderByMe('organisation')" class="fa fa-fw fa-sort"/></th>
-            <th>Status<i ng-click="orderByMe('status')" class="fa fa-fw fa-sort"/></th>
-            <th>Privacy<i ng-click="orderByMe('privacy')" class="fa fa-fw fa-sort"/></th>
-            <th>Adapter type<i ng-click="orderByMe('adapter')" class="fa fa-fw fa-sort"/></th>
+            <th>Status</th>
+            <th>Privacy</th>
+            <th>Adapter type</th>
           </tr>
         </thead>
         <tbody>
