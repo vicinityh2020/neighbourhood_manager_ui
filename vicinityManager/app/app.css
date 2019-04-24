@@ -148,8 +148,8 @@ Back to top - Arrow
 @media (min-width: 768px) {
   #backToTop{
     position: fixed;
-    right: 2%;
-    bottom: 12%;
+    right: 75px;
+    bottom: 15px;
     z-index: 1000;
   }
 }
@@ -157,8 +157,8 @@ Back to top - Arrow
 @media (max-width: 767px){
   #backToTop{
     position: fixed;
-    right: 20%;
-    bottom: 2%;
+    right: 75px;
+    bottom: 15px;
     z-index: 1000;
     cursor: pointer;
   }
