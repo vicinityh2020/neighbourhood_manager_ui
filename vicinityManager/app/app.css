@@ -157,8 +157,8 @@ Back to top - Arrow
 @media (max-width: 767px){
   #backToTop{
     position: fixed;
-    right: 3%;
-    bottom: 1%;
+    right: 20%;
+    bottom: 2%;
     z-index: 1000;
     cursor: pointer;
   }
