@@ -7,8 +7,7 @@
 </div>
 
 <!-- Filter -->
-<div class="row">
-  <div class="col-sm-3">
+<div>
     <br>
     <div class="dropdown" style="margin: 20px">
         <a ui-sref="root.main.contracts" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter contracts
@@ -21,10 +20,6 @@
            <li><a ng-click="changeFilter(3)" ui-sref="root.main.contracts">Pending approval</a></li>
         </ul>
      </div>
-  </div>
-  <div class="col-sm-9">
-    <img class="pull-right" src="img/logos/shqlogo.png"/>
-  </div>
 </div>
 
 <section ng-show="loaded">
