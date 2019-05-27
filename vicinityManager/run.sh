@@ -2,8 +2,8 @@
 usage="$(basename "$0") [-h -s] [-e env -p web_port -b web_dns -q api_port -a api_dns -n app_name -w workdir ]
 -- Builds vcnt-ui docker
  -- Examples
- -- Production: ./run.sh -s -e prod -a my.server.com:PORT -b my.ui.com
- -- Development: ./run.sh -e dev -a localhost:3000 -b localhost:8080
+ -- Production: ./run.sh -s -e prod -a api.vicinity.bavenir.eu -b my.ui.com
+ -- Development: ./run.sh -e dev -a api.vicinity.dev.bavenir.eu -b localhost:8080 -w .
  -- Local: ./run.sh [ without arguments, access on localhost:8080 ]
 
 where:
@@ -93,7 +93,13 @@ if [ ${SSL} == true ]; then
   PROTOCOL="https"
 else
   cat ${WORKDIR}/docker/nginx.nossl.conf | sed 's/#b#/'${WEB_DNS}'/' > ${WORKDIR}/aux
+  PROTOCOL="https"
+fi
+# Backend is SSL unless local settings
+if [ "${ENV}" == "local" ] ; then
   PROTOCOL="http"
+else
+  PROTOCOL="https"
 fi
 mv ${WORKDIR}/aux ${WORKDIR}/nginx.conf
 # Update env file
