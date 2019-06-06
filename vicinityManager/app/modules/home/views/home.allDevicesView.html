@@ -4,6 +4,66 @@
 
 <section class="content">
 
+  <div class="box box-default">
+    <div class="box-header with-border">
+      <h3 class="box-title">Filter</h3>
+
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse" ng-click="changeView()" ng-disabled="!listView"><i class="fa fa-th-large fa-lg"></i></button>
+        <button type="button" class="btn btn-box-tool" data-widget="collapse" ng-click="changeView()" ng-disabled="listView"><i class="fa fa-list fa-lg"></i></button>
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+
+            <label>Visibility and access rights</label>
+            <ui-select
+              ng-model="selectedAccessFilter"
+              theme="bootstrap"
+              ng-disabled="disabled"
+              reset-search-input="true"
+              title="Choose visibility and access filter"
+              on-select="onAccessFilterSelected($item, $model)">
+                <ui-select-match >
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item in (accessFilterData | filter: $select.search) track by item.id">
+                    <span ng-bind="item.name"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <!-- /.form-group -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="selectAccess">Device type</label>
+            <ui-select id="selectAccess"
+              ng-model="selected.value"
+              theme="bootstrap"
+              ng-disabled="disabled"
+              reset-search-input="true"
+              title="Choose an address">
+                <ui-select-match >
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item in (itemArray | filter: $select.search) track by item.id">
+                    <span ng-bind="item.name"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <!-- /.form-group -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.box-body -->
+  </div>
   <!-- Filter -->
   <div class="row">
     <div class="col-sm-9">
@@ -50,24 +110,77 @@
    </div>
 
    <div class="row" ng-if="!listView || imMobile">
+     <!-- reaped on each device in the list -->
      <div class="col-lg-4" ng-repeat="dev in devs | nameFilter:searchTerm">
+
+       <a ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})">
+         <div class="box box-widget widget-user">
+           <!-- Add the bg color to the header using any of the bg-* classes -->
+
+           <div class="widget-user-header bg-yellow-active">
+
+             <h3 class="widget-user-username">{{ dev.name | limitTo: 20 }}{{dev.name.length > 20 ? '...' : ''}}</h3>
+             <h5 class="widget-user-desc">{{ dev.cid.id.name | limitTo: 20 }}{{dev.cid.id.name.length > 20 ? '...' : ''}}</h5>
+           </div>
+           <div class="widget-user-image" >
+             <img class="img-circle" style="background-color: white" ng-src="{{dev.avatar}}" alt="Device Avatar">
+           </div>
+           <div class="box-footer">
+             <div class="row">
+               <div class="col-sm-4 border-right">
+                 <div class="description-block">
+
+                   <h5 class="description-text" ng-if="dev.status === 'disabled'">{{dev.statusCaption}}</h5>
+                   <h5 class="description-text" ng-if="dev.status !== 'disabled'">{{dev.privacyCaption}}</h5>
+                 </div>
+                 <!-- /.description-block -->
+               </div>
+               <!-- /.col -->
+               <div class="col-sm-4 border-right">
+                 <div class="description-block">
+                   <img style="max-width: 100%" ng-if="dev.adid.type === 'shq'" src="img/logos/shqlogo.png"/>
+                   <img style="max-width: 100%" ng-if="dev.adid.type === 'vcnt'" src="img/logos/vcntlogo.png"/>
+                 </div>
+                 <!-- /.description-block -->
+               </div>
+               <!-- /.col -->
+               <div class="col-sm-4">
+                 <div class="description-block">
+                   <h5 ng-disabled="true" class="description-text" ng-show="!dev.isOwner && !dev.imFriend && !dev.isContracted">
+                     Other's Device</h5>
+                   <h5 ng-disabled="true" href="#" class="description-text" ng-show="!dev.isOwner && dev.imFriend && !dev.isContracted">
+                     Friend's Device</h5>
+                   <h5 ng-disabled="true" href="#" class="description-text" ng-show="dev.isOwner">
+                     My Device</h5>
+                   <h5 ng-disabled="true" href="#" class="description-text" ng-show="dev.isContracted">
+                     Contracted Device</h5>
+
+                 </div>
+                 <!-- /.description-block -->
+               </div>
+               <!-- /.col -->
+             </div>
+             <!-- /.row -->
+           </div>
+         </div>
+       </a>
        <!-- WIDGET -->
 
-       <div class="small-box bg-yellow">
+       <!-- <div class="small-box bg-yellow">
          <div class="inner">
 
            <!-- IMAGE AND TOOLTIP -->
-           <div class="tooltip2" id="circle_gray" style="cursor:default"> &nbsp; &nbsp; &nbsp;
+           <!-- <div class="tooltip2" id="circle_gray" style="cursor:default"> &nbsp; &nbsp; &nbsp;
              <span class="tooltiptext2"> Unknown </span>
            </div>
            <div class="round">
              <img style="cursor: pointer" onmouseover="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})" ng-src="{{dev.avatar}}" alt="Company Avatar">
-           </div>
+           </div> -->
 
            <!-- CONTENT -->
-           <div align="left">
-             <h4><a style="color: #000; z-index: -1" href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})">{{dev.name}}</a></h4>
-              <h5><a style="text-decoration: underline; color: #FFF" href="" ui-sref="root.main.companyProfile.devices({companyAccountId: dev.cid.id._id})">{{dev.cid.id.name}}</a></h5>
+           <!-- <div align="left">
+             <h4><a style="color: #000; z-index: -1" href="" ui-sref="root.main.deviceProfile.whoSee({deviceId: dev._id})">{{ dev.name | limitTo: 20 }}{{dev.name.length > 20 ? '...' : ''}}</a></h4>
+              <h5><a style="text-decoration: underline; color: #FFF" href="" ui-sref="root.main.companyProfile.devices({companyAccountId: dev.cid.id._id})">{{ dev.cid.id.name | limitTo: 20 }}{{dev.cid.id.name.length > 20 ? '...' : ''}}</a></h5>
            </div>
            <hr>
            <div class="row">
@@ -80,10 +193,10 @@
                <img class="widget-logo-vcnt" ng-if="dev.adid.type === 'vcnt'" src="img/logos/vcntlogo.png"/>
              </div>
            </div>
-         </div>
+         </div> -->
 
          <!-- FOOTER -->
-         <div class="small-box-footer">
+         <!-- <div class="small-box-footer">
            <a ng-disabled="true" class="btn-xs btn-secondary btn-block centered" ng-show="!dev.isOwner && !dev.imFriend && !dev.isContracted">
              <i class="fa fa-circle-thin fa-lg"></i>
               &nbsp;<b>Other's Device</b>
@@ -109,7 +222,7 @@
            </a>
 
          </div>
-       </div>
+       </div> -->
 
       <!-- END WIDGET -->
     </div>
@@ -176,3 +289,10 @@
   </div>
 
 </section>
+<script>
+  // In your Javascript (external .js resource or <script> tag)
+  $(document).ready(function() {
+      console.log("Select 2 executed");
+      $('.select2').select2();
+  })
+</script>

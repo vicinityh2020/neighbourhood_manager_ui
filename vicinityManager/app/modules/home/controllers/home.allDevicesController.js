@@ -1,6 +1,6 @@
-'use strict';
-angular.module('VicinityManagerApp.controllers')
-.controller('allDevicesController',
+'use strict'
+
+angular.module('VicinityManagerApp.controllers').controller('allDevicesController',
    function ($scope, $window, itemsAPIService, commonHelpers, itemsHelpers, searchAPIService, Notification, $q){
 
 // ====== Triggers window resize to avoid bug =======
@@ -24,7 +24,7 @@ angular.module('VicinityManagerApp.controllers')
    $scope.myId = $window.sessionStorage.companyAccountId;
    $scope.offset = 0;
    $scope.allItemsLoaded = false;
-   $scope.filterNumber = 4;
+
    $scope.typeOfItem = "devices";
    $scope.header = "My Devices";
    $scope.isCollapsed = true;
@@ -34,7 +34,20 @@ angular.module('VicinityManagerApp.controllers')
    $scope.itemFilter = {};
    $scope.listView = false;
    $scope.myOrderBy = 'name';
-
+   $scope.accessFilterData = [
+     {id: 0, name: "My disabled devices"},
+     {id: 1, name: "My private devices"},
+     {id: 2, name: "My devices for friends"},
+     {id: 3, name: "My public devices"},
+     {id: 4, name: "My devices"},
+     {id: 8, name: "Contracted devices"},
+     {id: 9, name: "Mine & Contracted devices"},
+     {id: 5, name: "Friend's devices"},
+     {id: 6, name: "All public devices"},
+     {id: 7, name: "All devices"}
+   ];
+   $scope.selectedAccessFilter = $scope.accessFilterData[5];
+   $scope.filterNumber = $scope.selectedAccessFilter.id;
    init();
 
    function init(){
@@ -49,7 +62,9 @@ angular.module('VicinityManagerApp.controllers')
         return searchAPIService.getOntologyTypes();
       })
       .then(function(response){
+        console.log(response);
         $scope.ontologyTypes.devices = response.data.message.data["device-hierarchy"];
+        console.log($scope.ontologyTypes.devices);
         // $scope.ontologyTypes.services = response.data.message.data["service-hierarchy"];
         // $scope.ontologyTypes.properties = response.data.message.data["property-hierarchy"];
         itemFilter($scope.itemType);
@@ -96,6 +111,10 @@ angular.module('VicinityManagerApp.controllers')
      changeHeader(n);
      $scope.refresh($scope.itemType);
  };
+
+$scope.onAccessFilterSelected = function(item, model){
+  $scope.filterItems(item.id);
+};
 
   function changeHeader(n){
     switch (n) {
