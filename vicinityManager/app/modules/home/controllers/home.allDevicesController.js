@@ -46,7 +46,7 @@ angular.module('VicinityManagerApp.controllers').controller('allDevicesControlle
      {id: 6, name: "All public devices"},
      {id: 7, name: "All devices"}
    ];
-   $scope.selectedAccessFilter = $scope.accessFilterData[5];
+   $scope.selectedAccessFilter = $scope.accessFilterData[4];
    $scope.filterNumber = $scope.selectedAccessFilter.id;
    init();
 
@@ -237,9 +237,9 @@ $scope.onAccessFilterSelected = function(item, model){
  // Add caption based on item status and privacy
  function addCaption(item){
    item.statusCaption = item.status === 'enabled' ? "Enabled" : "Disabled";
-   if(item.isPublic){ item.privacyCaption = 'Device is public';}
-   else if(item.isFriendData){ item.privacyCaption = 'Access for friends'; }
-   else{ item.privacyCaption = 'Private data'; }
+   if(item.isPublic){ item.privacyCaption = 'Public';}
+   else if(item.isFriendData){ item.privacyCaption = 'For Friends'; }
+   else{ item.privacyCaption = 'Private'; }
    return item;
  }
 
