@@ -1,7 +1,7 @@
 'use strict';
 angular.module('VicinityManagerApp.controllers')
 .controller('cProleController',
-function ($scope, $window, commonHelpers, $stateParams, userAPIService, Notification) {
+function ($scope, $rootScope, $window, commonHelpers, $stateParams, userAPIService, Notification, AuthenticationService) {
 
 // Initialize variables ========
 // ====== Triggers window resize to avoid bug =======
@@ -40,6 +40,13 @@ function ($scope, $window, commonHelpers, $stateParams, userAPIService, Notifica
           } else {
             Notification.warning(response.data.message);
           }
+          return AuthenticationService.refresh({roles: data.data.roles});
+        })
+        .then(function(response){
+          AuthenticationService.SetCredentials(response.data.message);
+          // Send event informing of the update of the roles
+          $rootScope.$broadcast('refreshToken', {});
+          Notification.success("Token refreshed");
           $scope.myInit();
         })
         .catch(function(err){

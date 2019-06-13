@@ -1,14 +1,18 @@
 'use strict';
 angular.module('VicinityManagerApp.controllers')
 .controller('homeController',
-            ['$rootScope', '$scope', '$window', 'Base64','tokenDecoder', 'commonHelpers', '$interval', 'userAccountAPIService',
-            function ($rootScope, $scope, $window, Base64, tokenDecoder, commonHelpers, $interval, userAccountAPIService) {
+function ($rootScope, $scope, $window, Base64, tokenDecoder, commonHelpers, $interval, userAccountAPIService) {
 
   // ====== Triggers window resize to avoid bug =======
     commonHelpers.triggerResize();
 
   // Checks if it is necessary to display goToTop
   $interval(checkScroll, 1000);
+
+  // Listen to updates on the user roles and refresh DOM
+  $scope.$on('refreshToken', function(event, data){
+    myInit();
+  });
 
   /*
   Initializes skin color based on skinColor field in useraccounts MONGO schema
@@ -50,29 +54,14 @@ angular.module('VicinityManagerApp.controllers')
     $scope.isAdmin = false;
     $scope.isIntegrator = false;
 
-    var myInit = function(){
+    function myInit(){
       var payload = tokenDecoder.deToken();
-
-      for(var i in payload.roles){
-        if(payload.roles[i] === 'devOps'){
-          $scope.isDev = true;
-        }
-        if(payload.roles[i] === 'infrastructure operator'){
-          $scope.isInfOp = true;
-        }
-        if(payload.roles[i] === 'device owner'){
-          $scope.isDevOwn = true;
-        }
-        if(payload.roles[i] === 'service provider'){
-          $scope.isServProv = true;
-        }
-        if(payload.roles[i] === 'system integrator'){
-          $scope.isIntegrator = true;
-        }
-        if(payload.roles[i] === 'administrator'){
-          $scope.isAdmin = true;
-        }
-      }
+      $scope.isDev = payload.roles.indexOf('devOps') !== -1;
+      $scope.isInfOp = payload.roles.indexOf('infrastructure operator') !== -1;
+      $scope.isDevOwn = payload.roles.indexOf('device owner') !== -1;
+      $scope.isServProv = payload.roles.indexOf('service provider') !== -1;
+      $scope.isIntegrator = payload.roles.indexOf('system integrator') !== -1;
+      $scope.isAdmin = payload.roles.indexOf('administrator') !== -1;
     };
 
     myInit();
@@ -91,4 +80,4 @@ angular.module('VicinityManagerApp.controllers')
     }
 
   }
-]);
+);

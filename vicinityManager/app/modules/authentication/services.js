@@ -12,6 +12,10 @@ angular.module('Authentication')
             return $http.post(configuration.apiUrl + '/login/recovery',data);
           };
 
+          service.refresh = function(data) {
+            return $http.post(configuration.apiUrl + '/login/refresh',data);
+          };
+
           service.resetPwd = function(id, data) {
             return $http.put(configuration.apiUrl + '/login/recovery/' + id ,data);
           };
