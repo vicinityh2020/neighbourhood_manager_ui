@@ -41,22 +41,23 @@
         <!-- /.col -->
         <div class="col-md-6">
           <!-- TODO: Loading ontology for dropdown needs to be fixed!! -->
-          <!-- <div class="form-group">
+          <div class="form-group">
             <label for="selectAccess">Device type</label>
             <ui-select id="selectAccess"
-              ng-model="selected.value"
+              ng-model="ontology.selected"
               theme="bootstrap"
               ng-disabled="disabled"
               reset-search-input="true"
-              title="Choose an address">
+              title="Choose a type"
+              on-select="onAccessFilterOntology($item)">
                 <ui-select-match >
-                    <span ng-bind="$select.selected.name"></span>
+                    <span ng-bind="$select.selected.label"></span>
                 </ui-select-match>
-                <ui-select-choices repeat="item in (itemArray | filter: $select.search) track by item.id">
-                    <span ng-bind="item.name"></span>
+                <ui-select-choices repeat="item in (ontology.typeSubclasses | filter: $select.search) track by item.label">
+                    <span ng-bind="item.label"></span>
                 </ui-select-choices>
             </ui-select>
-          </div> -->
+          </div>
           <!-- /.form-group -->
         </div>
         <!-- /.col -->

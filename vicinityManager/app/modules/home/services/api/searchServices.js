@@ -13,11 +13,11 @@ factory('searchAPIService', ['$http', 'configuration', '$window', function($http
   };
 
   searchAPI.searchItem = function(filter) {
-    return $http.get(configuration.apiUrl + '/search/item/?searchTerm=' + filter);
+    return $http.get(configuration.apiUrl + '/search/item?searchTerm=' + filter);
   };
 
-  searchAPI.getOntologyTypes = function() {
-    return $http.get(configuration.apiUrl + '/search/ontology');
+  searchAPI.getOntologyTypes = function(type) {
+    return $http.get(configuration.apiUrl + '/search/ontology?type=' + type);
   };
 
   return searchAPI;
