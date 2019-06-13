@@ -18,7 +18,9 @@ angular.module('VicinityManagerApp', [
   'Authentication',
   'Registration',
   'constants',
-  'angularFileUpload'
+  'angularFileUpload',
+  'ui.select',
+  'ngSanitize'
 ])
 .config(function($stateProvider, $urlRouterProvider) {
 
