@@ -1,7 +1,7 @@
 'use strict';
 angular.module('VicinityManagerApp.controllers')
 .controller('userProfileController',
-function ($scope, $window, $stateParams, $location, commonHelpers, userAPIService, Notification) {
+function ($scope, $rootScope, $window, $stateParams, $location, commonHelpers, userAPIService, Notification) {
 
   // ====== Triggers window resize to avoid bug =======
   commonHelpers.triggerResize();
@@ -410,6 +410,7 @@ userAPIService.editInfoAboutUser($stateParams.userAccountId, {'data': {avatar: b
         .then(
           function(response) {
             $scope.avatar = response.data.message.avatar;
+            $rootScope.$broadcast('refreshUserAvatar', {avatar: $scope.avatar});
             $('#editCancel1').fadeOut('slow');
             $('#editUpload2').fadeOut('slow');
             $('#input1').fadeOut('slow');

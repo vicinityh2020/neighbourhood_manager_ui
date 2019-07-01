@@ -5,6 +5,11 @@ controller('companyAccountController', function($scope, $window, commonHelpers, 
   // ====== Triggers window resize to avoid bug =======
   commonHelpers.triggerResize();
 
+  // Listen to updates on the avatar and refresh DOM
+  $scope.$on('refreshOrganisationAvatar', function(event, data){
+    $scope.avatar = data.avatar;
+  });
+
   $scope.name = "";
   $scope.avatar = "";
   $scope.companyAccountId = "";

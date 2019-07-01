@@ -12,6 +12,11 @@ controller('userAccountController', function($scope, $window, $cookies, commonHe
   // ====== Triggers window resize to avoid bug =======
   commonHelpers.triggerResize();
 
+  // Listen to updates on the avatar and refresh DOM
+  $scope.$on('refreshUserAvatar', function(event, data){
+    $scope.avatar = data.avatar;
+  });
+
   $scope.signout = function(){
     console.log("Begin: Signout");
     $cookies.remove("rM_V"); // If log out remove rememberMe cookie
