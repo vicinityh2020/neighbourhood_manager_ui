@@ -14,6 +14,10 @@ function ($rootScope, $scope, $window, Base64, tokenDecoder, commonHelpers, $int
     myInit();
   });
 
+  // Click on toggle
+  $scope.clickToggle = function(){
+    $rootScope.$broadcast('togglePress', {});
+  }
   /*
   Initializes skin color based on skinColor field in useraccounts MONGO schema
   */

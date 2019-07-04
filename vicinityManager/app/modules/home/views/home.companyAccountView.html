@@ -1,13 +1,13 @@
-<div ng-hide="loaded">
-  <div style="margin: auto; width:60%">
-    <i class="fa fa-refresh fa-spin fa-5x" style="color: #ECF0F1"></i>
-  </div>
-</div>
-<div class="profile" ng-show="loaded">
+<div class="profile" ng-show="!isToggled">
     <div class="profile_pic">
         <a ui-sref="root.main.companyProfile.friends({companyAccountId: companyAccountId})"><img style="width: 90px; height: 90px" src="{{avatar}}" alt="..." class="img-circle profile_img"></a>
     </div>
-    <div class="profile_info">
-        <a ui-sref="root.main.companyProfile.friends({companyAccountId: companyAccountId})"><h2 class="paddedSides">{{name}}</h2></a>
+    <div align="center" class="profile_info">
+        <a ui-sref="root.main.companyProfile.friends({companyAccountId: companyAccountId})"><h2>{{name}}</h2></a>
+    </div>
+</div>
+<div class="profile" ng-show="isToggled">
+    <div class="profile_pic">
+        <a ui-sref="root.main.companyProfile.friends({companyAccountId: companyAccountId})"><img style="width: 30px; height: 30px" src="{{avatar}}" alt="..." class="img-circle profile_img"></a>
     </div>
 </div>
