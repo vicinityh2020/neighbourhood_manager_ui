@@ -51,6 +51,9 @@
               </div>
             </div>
           </div>
+          <div class="centered" ng-show="resultsOrganisations.length >= 25">
+            <h3 class="well">There might be more results, please narrow your search</h3>
+          </div>
       </div>
     </div>
 
@@ -87,6 +90,9 @@
                     <a href="" class="widget-user-footer-moreinfo6" ui-sref="root.main.userProfile({userAccountId: result2._id, companyAccountId: result2.cid.id})">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
               </div>
+            </div>
+            <div class="centered" ng-show="resultsUsers.length >= 25">
+              <h3 class="well">There might be more results, please narrow your search</h3>
             </div>
         </div>
       </div>
@@ -193,6 +199,10 @@
                     <a href="" ui-sref="root.main.serviceProfile.whoSee({serviceId: dev._id})" class="widget-user-footer-moreinfo">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
               </div>
+            </div>
+
+            <div class="centered" ng-show="resultsItems.length >= 25">
+              <h3 class="well">There might be more results, please narrow your search</h3>
             </div>
 
         </div>
