@@ -520,8 +520,8 @@ angular.module('VicinityManagerApp', [
     });
   })
 
-.run(['$rootScope', '$location', '$cookies', '$http', '$window',
-      function($rootScope, $location, $cookies, $http, $window){
+.run(['$rootScope', '$location', '$cookies', '$http', '$window', '$stateParams',
+      function($rootScope, $location, $cookies, $http, $window, $stateParams){
 
           FastClick.attach(document.body);
 
@@ -537,38 +537,30 @@ angular.module('VicinityManagerApp', [
         $rootScope.$on('$locationChangeStart', function(evetn, next, current) {
 
           if(($location.url() !== '/login') && !$window.sessionStorage.token){
-              //TODO: Check validy of the token, if token is invalid. Clear credentials and pass to the login page.
+            //TODO: Check validy of the token, if token is invalid. Clear credentials and pass to the login page.
 
-            var p = $location.url();
+            // var p = $location.url();
+            var path = $location.hash();
 
-            // Instead of replacing %2F for / check: https://stackoverflow.com/questions/41272314/angular-all-slashes-in-url-changed-to-2f
-            var lastPos = p.lastIndexOf("/");
+            // Divide url and param
+            var lastPos = path.lastIndexOf("/");
+            var param = path.substring(lastPos + 1, path.length);
+            var url = path.substring(0, lastPos + 1);
 
-            // Case url has / encoded as %2F
-            if(lastPos === 0){
-              while(p.lastIndexOf("%2F") !== -1 ){
-                p = p.replace("%2F","/");
-              }
-              lastPos = p.lastIndexOf("/");
-            }
+            // Check if non valid characters in param
+            var uriValid = /[0-9a-fA-F]+/ ;
+            var check = uriValid.test(param);
 
-            // Divide url and id
-            var strId = p.substring(p.length-24,p.length);
-            var strBeg = p.substring(0,lastPos + 1);
-
-            var patt1 = /[0-9a-fA-F]+/ ;
-            var result1 = patt1.test(strId);
-
-            if ((strBeg.indexOf('/invitation/newCompany/')) !== -1 && result1){
-              $location.path('/invitation/newCompany/' + strId);
-            }else if ((strBeg.indexOf('/invitation/newUser/')) !== -1 && result1){
-              $location.path('/invitation/newUser/' + strId);
-            }else if ((strBeg.indexOf('/registration/newCompany/')) !== -1 && result1){
-              $location.path('/registration/newCompany/' + strId);
-            }else if ((strBeg.indexOf('/registration/newUser/')) !== -1 && result1){
-              $location.path('/registration/newUser/' + strId);
-            }else if ((strBeg.indexOf('/authentication/recoverPassword/')) !== -1 && result1){
-              $location.path('/authentication/recoverPassword/' + strId);
+            if ((url.indexOf('/invitation/newCompany/')) !== -1 && check){
+              $location.path('/invitation/newCompany/' + param);
+            }else if ((url.indexOf('/invitation/newUser/')) !== -1 && check){
+              $location.path('/invitation/newUser/' + param);
+            }else if ((url.indexOf('/registration/newCompany/')) !== -1 && check){
+              $location.path('/registration/newCompany/' + param);
+            }else if ((url.indexOf('/registration/newUser/')) !== -1 && check){
+              $location.path('/registration/newUser/' + param);
+            }else if ((url.indexOf('/authentication/recoverPassword/')) !== -1 && check){
+              $location.path('/authentication/recoverPassword/' + param);
             }else{
               $location.path('/login');
             }
