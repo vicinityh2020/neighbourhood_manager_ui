@@ -102,13 +102,22 @@ else
   PROTOCOL="https"
 fi
 mv ${WORKDIR}/aux ${WORKDIR}/nginx.conf
+
 # Update env file
+if [ "${ENV}" == "prod" ] ; then
+  BASE_API="api.vicinity.bavenir.eu"
+  BASE_WEB="vicinity.bavenir.eu"
+else
+  BASE_API="api.vicinity.dev.bavenir.eu"
+  BASE_WEB="development.bavenir.eu"
+fi
 cat ${WORKDIR}/app/envs/env.js \
-	| sed 's/#a#/'${API_URL}'/' \
-  | sed 's/#b#/'${WEB_URL}'/' \
-	| sed 's/#c#/'${PROTOCOL}'/' \
-	> ${WORKDIR}/aux
+  | sed 's/#a#/'${BASE_API}'/' \
+  | sed 's/#b#/'${BASE_WEB}'/' \
+  | sed 's/#c#/'${PROTOCOL}'/' \
+  > ${WORKDIR}/aux
 mv ${WORKDIR}/aux ${WORKDIR}/app/env.js
+
 # Docker build
 if [ ${ENV} != "local" ]; then
   cd ${WORKDIR} && bower install -F
