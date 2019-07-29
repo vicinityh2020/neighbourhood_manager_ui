@@ -139,6 +139,7 @@ elif [ "${SSL}" == true ] && [ "${WEB_DNS}" == "localhost" ]; then
 elif [ "${SSL}" == false ] || [ "${WEB_DNS}" == "localhost" ]; then
   echo "Running non-SSL mode"
   docker run -d -p ${WEB_PORT}:80 \
+          --restart always \
           --name ${NAME} \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
           ${NAME}:latest
@@ -146,6 +147,7 @@ else
   echo "Configuration complete, running SSL mode"
   docker run -d -p 443:443 -p 80:80 \
           --name ${NAME} \
+          --restart always \
           --mount type=bind,source=/etc/letsencrypt/live/${WEB_DNS}/privkey.pem,target=/var/certificates/privkey.pem,readonly \
           --mount type=bind,source=/etc/letsencrypt/live/${WEB_DNS}/fullchain.pem,target=/var/certificates/fullchain.pem,readonly \
           -v ~/docker_data/logs/nginx:/var/log/nginx \
