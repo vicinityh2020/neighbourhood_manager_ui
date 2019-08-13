@@ -136,7 +136,7 @@
               <a href="" ng-click="alertPopUp1()" class="text-center">Terms and Conditions</a>
           </div>
           <div style="margin-top: 50px">
-            <button type="submit" ng-disabled="!termsAccepted || password1Reg!==password2Reg" class="btn btn-primary btn-block btn-flat" >Register me</button>    <!-- ng-disabled="form.$invalid || dataLoading" -->
+            <button type="submit" ng-disabled="isRegistering || !termsAccepted || password1Reg!==password2Reg" class="btn btn-primary btn-block btn-flat" >Register me</button>    <!-- ng-disabled="form.$invalid || dataLoading" -->
           </div>
 
         </form>

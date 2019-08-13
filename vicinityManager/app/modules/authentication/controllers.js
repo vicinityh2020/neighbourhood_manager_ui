@@ -19,6 +19,7 @@ angular.module('Authentication')
    $scope.note2 = "Log in to start your session";
    $scope.error = "";
    $scope.termsAccepted = false;
+   $scope.isRegistering = false;
    $scope.rememberMe = false;
 
    $('div#allTemplates').show();
@@ -109,6 +110,7 @@ $scope.registerCompany = function () {
   var $pass2 = $("#pw2");
   if ($scope.password1Reg === $scope.password2Reg){
     if($scope.password1Reg.length > 7){
+    $scope.isRegistering = true;
     findMeDuplicates()
     .then(function(response){
     return registrationsAPIService.postOne(
@@ -125,6 +127,7 @@ $scope.registerCompany = function () {
       })
       .then(endRegistration)
       .catch(function(err){
+        $scope.isRegistering = false;
         if(err !== "DUPLICATES"){
           console.log(err);
           Notification.error("There was an issue in the registration process");
