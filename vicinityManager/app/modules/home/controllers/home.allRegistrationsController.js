@@ -32,20 +32,20 @@ angular.module('VicinityManagerApp.controllers').
 // Functions
 
   $scope.verifyAction = function(id){
+    $scope.loadedPage = false;
     registrationsAPIService.putOne(id,{status: "pending" })
     .then(function(response){
       Notification.success("Verification mail was sent to the company!");
-      $scope.status = 'pending';
       init();
     })
     .catch(errorCallback);
   };
 
   $scope.declineAction = function(id){
+    $scope.loadedPage = false;
   registrationsAPIService.putOne(id,{status: "declined" })
     .then(function(response){
       Notification.success("Company was rejected!");
-      $scope.status = 'declined';
       init();
     })
     .catch(errorCallback);
