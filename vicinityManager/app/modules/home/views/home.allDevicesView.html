@@ -4,6 +4,7 @@
 
 <section class="content">
 
+  <!-- Filter -->
   <div class="box box-default">
     <div class="box-header with-border">
       <h3 class="box-title">Filter</h3>
@@ -66,42 +67,6 @@
     </div>
     <!-- /.box-body -->
   </div>
-  <!-- Filter -->
-  <!-- <div class="row">
-    <div class="col-sm-9">
-    <div class="dropdown" style="margin: 10px">
-      <a ui-sref="root.main.allDevices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Visibility and access rights
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" role="menu">
-         <li><a ng-click="filterItems(0)" ui-sref="root.main.allDevices">My disabled {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(1)" ui-sref="root.main.allDevices">My private {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(2)" ui-sref="root.main.allDevices">My {{typeOfItem}} for friends</a></li>
-         <li><a ng-click="filterItems(3)" ui-sref="root.main.allDevices">My public {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(4)" ui-sref="root.main.allDevices">My {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(8)" ui-sref="root.main.allDevices">Contracted {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(9)" ui-sref="root.main.allDevices">Mine & Contracted {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(5)" ui-sref="root.main.allDevices">Friend's {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(6)" ui-sref="root.main.allDevices">All public {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(7)" ui-sref="root.main.allDevices">All {{typeOfItem}}</a></li>
-      </ul>
-     </div>
-
-     <div class="dropdown" style="margin: 10px">
-       <a ui-sref="root.main.allDevices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Device types
-         <span class="caret"></span>
-       </a>
-       <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="item in itemFilter.subclasses"><a ng-click="refresh(item)" ui-sref="root.main.allDevices">{{item}}</a></li>
-       </ul>
-      </div>
-    </div>
-
-    <div align="right" class="col-sm-3" ng-if="!imMobile">
-      <button class="btn-xs btn-primary" ng-click="changeView()" ng-disabled="!listView"><i class="fa fa-th-large fa-lg"></i></button>
-      <button class="btn-xs btn-primary" ng-click="changeView()" ng-disabled="listView"><i class="fa fa-list fa-lg"></i></button>
-    </div>
-  </div> -->
 
 <!-- Start -->
   <div ng-show="loadedPage">

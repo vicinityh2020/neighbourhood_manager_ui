@@ -131,6 +131,17 @@ angular.module('VicinityManagerApp', [
           }
         })
 
+        .state('root.main.counters', {
+          url: '/counters',
+          views: {
+            'mainContentView@root':
+              {
+                templateUrl: 'modules/home/views/home.counters.html',
+                controller: 'countersController'
+              }
+          }
+        })
+
         .state('root.main.contracts', {
           url: '/contracts',
           views: {

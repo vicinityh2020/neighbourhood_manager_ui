@@ -1,0 +1,158 @@
+<section class="content-header">
+  <h1>{{ headerCaption }}</h1>
+</section>
+
+<!-- LOADING -->
+<div class="coll-md-1" ng-hide="loaded" style="margin: auto; width:60%">
+  <i class="fa fa-refresh fa-spin fa-4x" style="text-align: center; display: block"/>
+</div>
+
+<section class="content" ng-show="loaded">
+
+<!-- FILTER -->
+  <div class="box box-default">
+    <div class="box-header with-border">
+      <h3 class="box-title">Filters</h3>
+
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Period</label>
+            <ui-select
+              ng-model="periodDataSelected"
+              theme="bootstrap"
+              ng-disabled="disabled"
+              reset-search-input="true"
+              title="Period"
+              on-select="onAccessFilterPeriod($item, $model)">
+                <ui-select-match >
+                    <span ng-bind="$select.selected.caption"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item in (periodData | filter: $select.search) track by item.id">
+                    <span ng-bind="item.caption"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <!-- /.form-group -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Objects: {{objectType}}</label>
+            <ui-select
+              ng-model="objectDataSelected"
+              theme="bootstrap"
+              ng-disabled="disabled"
+              reset-search-input="true"
+              title="Period"
+              on-select="onAccessFilterObject($item, $model)">
+                <ui-select-match >
+                    <span ng-bind="$select.selected.caption"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item in (objectsData | filter: $select.search) track by item.id">
+                    <span ng-bind="item.caption"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <!-- /.form-group -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.box-body -->
+  </div>
+
+<!-- Table -->
+<div class="box box-info">
+  <div class="box-header with-border">
+    <h3 class="box-title">Data</h3>
+
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      <!-- <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
+    </div>
+  </div>
+  <div class="box-body">
+    <table id="RegTable" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Size(Bytes)</th>
+          <th>#Properties</th>
+          <th>#Actions</th>
+          <th>#Events</th>
+          <th>#Technical</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-sm-2">
+            {{ periodDataSelected.caption }}
+          </td>
+          <td class="col-sm-2">
+            <span>{{data.period.totalSize}}</span>
+          </td>
+          <td class="col-sm-2">
+            <span>{{data.period.property}}</span>
+          </td>
+          <td class="col-sm-2">
+            <span>{{data.period.action}}</span>
+          </td>
+          <td class="col-sm-2">
+            <span>{{data.period.event}}</span>
+          </td>
+          <td class="col-sm-2">
+            <span>{{data.period.technical}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CHARTS -->
+
+  <div class="box box-info" ng-show="showBarChart">
+    <div class="box-header with-border">
+      <h3 class="box-title">Messages per day</h3>
+
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        <!-- <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
+      </div>
+    </div>
+    <div class="box-body">
+      <div class="chart">
+        <canvas id="barChart" style="height: 180px; width: 400px;" height="300" width="800"></canvas>
+      </div>
+    </div>
+    <!-- /.box-body -->
+  </div>
+
+  <div class="box box-info" ng-show="showPieChart">
+    <div class="box-header with-border">
+      <h3 class="box-title">Type of message share</h3>
+
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        <!-- <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
+      </div>
+    </div>
+    <div class="box-body" style="">
+        <canvas id="pieChart" style="height: 180px; width: 400px;" height="300" width="800"></canvas>
+    </div>
+    <!-- /.box-body -->
+  </div>
+
+  <div class="centered" ng-show="showWarning">
+    <h3 class="well">No data available for the filter selection!</h3>
+  </div>
+
+</section>
