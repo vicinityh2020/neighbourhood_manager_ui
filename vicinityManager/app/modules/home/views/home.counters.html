@@ -44,16 +44,34 @@
         <!-- /.col -->
         <div class="col-md-6">
           <div class="form-group">
-            <label>Objects: {{objectType}}</label>
+            <label>Access Points: Agents or adapters</label>
             <ui-select
-              ng-model="objectDataSelected"
+              ng-model="agentDataSelected"
               theme="bootstrap"
               ng-disabled="disabled"
               reset-search-input="true"
-              title="Period"
+              title="Agent"
+              on-select="onAccessFilterAgent($item, $model)">
+                <ui-select-match>
+                    <span ng-bind="$select.selected.caption"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item in (agentsData | filter: $select.search) track by item.id">
+                    <span ng-bind="item.caption"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="form-group">
+            <label>Objects: Devices and services</label>
+            <ui-select
+              ng-model="objectDataSelected"
+              theme="bootstrap"
+              ng-disabled="hideObjectFilter"
+              reset-search-input="true"
+              title="Object"
               on-select="onAccessFilterObject($item, $model)">
                 <ui-select-match >
-                    <span ng-bind="$select.selected.caption"></span>
+                    <span ng-show="objectType==='oid'" ng-bind="$select.selected.caption"></span>
+                    <span ng-show="objectType!=='oid'">-- All Objects --</span>
                 </ui-select-match>
                 <ui-select-choices repeat="item in (objectsData | filter: $select.search) track by item.id">
                     <span ng-bind="item.caption"></span>
@@ -70,7 +88,7 @@
   </div>
 
 <!-- Table -->
-<div class="box box-info">
+<div class="box box-info" ng-show="showData">
   <div class="box-header with-border">
     <h3 class="box-title">Data</h3>
 

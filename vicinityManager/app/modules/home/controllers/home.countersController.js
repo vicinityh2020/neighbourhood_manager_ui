@@ -19,19 +19,24 @@ function ($scope, $window, commonHelpers, counterAPIService, Notification) {
   $scope.data = {};
   $scope.showData = true;
   $scope.showWarning = false; // Displays no Data notification
-  // Filter objects vars
+  // Filters initialization
   $scope.filterObject = $window.sessionStorage.cid; // Initial selection is organisation (CID)
-  $scope.objectsData = [{id: 0, name: $scope.filterObject, caption: "-- All Organisation --"}];
-  $scope.objectDataSelected = $scope.objectsData[0];
-  $scope.objectType = "cid";
-  // Filter period vars
+  $scope.objectType = "cid"; // Changes depending on the type of object
   $scope.filterPeriod = "week";
-  $scope.periodData = [
-    {id: 0, name: "day", caption: "Yesterday"},
-    {id: 1, name: "week", caption: "Last 7 days"},
-    {id: 2, name: "month", caption: "Last 30 days"}
-  ];
-  $scope.periodDataSelected = $scope.periodData[1];
+    // Filter agents vars
+    $scope.agentsData = [{id: 0, name: $scope.filterObject, caption: "-- All Infrastructures --"}];
+    $scope.agentDataSelected = $scope.agentsData[0];
+    // Filter objects vars
+    $scope.hideObjectFilter = true;
+    $scope.objectsData = [{id: 0, name: $scope.agentDataSelected.name, caption: "-- All Objects --"}];
+    $scope.objectDataSelected = $scope.objectsData[0];
+    // Filter period vars
+    $scope.periodData = [
+      {id: 0, name: "day", caption: "Yesterday"},
+      {id: 1, name: "week", caption: "Last 7 days"},
+      {id: 2, name: "month", caption: "Last 30 days"}
+    ];
+    $scope.periodDataSelected = $scope.periodData[1];
   // Chart vars
   $scope.chartsInitialized = false;
   $scope.showBarChart = true; // Change to false if no data
@@ -80,7 +85,7 @@ function ($scope, $window, commonHelpers, counterAPIService, Notification) {
       data = response.data.message.data;
       objects = response.data.message.objects;
       processData(data);
-      processObjects(objects);
+      processObjects(objects, $scope.objectType);
       createCharts();
       Notification.success("Counters loaded");
     } else if(response.data.message.objects.length > 0) {
@@ -89,7 +94,8 @@ function ($scope, $window, commonHelpers, counterAPIService, Notification) {
       $scope.showData = false;
       $scope.showPieChart = false;
       $scope.showBarChart = false;
-      processObjects(objects);
+      objects = response.data.message.objects;
+      processObjects(objects, $scope.objectType);
       Notification.warning("There is no data");
     } else {
       $scope.data.period = {};
@@ -123,14 +129,28 @@ function ($scope, $window, commonHelpers, counterAPIService, Notification) {
     reload();
   };
 
+  $scope.onAccessFilterAgent = function(item){
+    $scope.filterObject = item.name;
+    $scope.agentDataSelected = $scope.agentsData[item.id];
+    if(item.caption === "-- All Infrastructures --"){
+      $scope.objectType = "cid";
+      $scope.hideObjectFilter = true;
+      $scope.objectsData = [];
+      $scope.objectDataSelected = {id: 0, name: $scope.agentDataSelected.name, caption: "-- All Objects --"};
+    } else {
+      $scope.objectType = "agid";
+      $scope.objectsData = [];
+      $scope.objectDataSelected = {id: 0, name: $scope.agentDataSelected.name, caption: "-- All Objects --"};
+    }
+    reload();
+  };
+
   $scope.onAccessFilterObject = function(item){
     $scope.filterObject = item.name;
     $scope.objectDataSelected = $scope.objectsData[item.id];
-    $scope.objectsData = [];
-    if($scope.objectType === "cid"){
+    if(item.caption === "-- All Objects --"){
+      $scope.filterObject = $scope.agentDataSelected.name;
       $scope.objectType = "agid";
-    } else if(item.caption === "-- All Organisation --"){
-      $scope.objectType = "cid";
     } else {
       $scope.objectType = "oid";
     }
@@ -201,15 +221,26 @@ function ($scope, $window, commonHelpers, counterAPIService, Notification) {
   /*
     Process the objects (gtw or devices) to create Objects filter
   */
-  function processObjects(objects){
-    $scope.objectsData = [];
-    var n = 0;
-    if($scope.objectType !== "cid"){
-      $scope.objectsData.push({ id: n, name: $window.sessionStorage.cid, caption: "-- All Organisation --" });
+  function processObjects(objects, type){
+    if(type === "cid"){
+      $scope.agentsData = [];
+      var n = 0;
+      $scope.agentsData.push({ id: n, name: $window.sessionStorage.cid, caption: "-- All Infrastructures --" });
       n = 1;
-    }
-    for(var i = 0, l = objects.length; i < l; i++){
-      $scope.objectsData.push({ id: n + i, name: objects[i].extid ,caption: objects[i].extid});
+      for(var i = 0, l = objects.length; i < l; i++){
+        $scope.agentsData.push({ id: n + i, name: objects[i].extid, caption: objects[i].id.name});
+      }
+    } else if(type === "agid"){
+      $scope.hideObjectFilter = false;
+      $scope.objectsData = [];
+      var n = 0;
+      $scope.objectsData.push({ id: n, name: $scope.agentDataSelected.name, caption: "-- All Objects --" });
+      n = 1;
+      for(var i = 0, l = objects.length; i < l; i++){
+        $scope.objectsData.push({ id: n + i, name: objects[i].extid, caption: objects[i].id.name});
+      }
+    } else {
+      $scope.hideObjectFilter = false;
     }
   }
 
