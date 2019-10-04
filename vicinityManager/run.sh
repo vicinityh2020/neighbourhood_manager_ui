@@ -4,7 +4,7 @@ usage="$(basename "$0") [-h -s] [-e env -p web_port -b web_dns -q api_port -a ap
  -- Examples
  -- Production: ./run.sh -s -e prod -a api.vicinity.bavenir.eu -b my.ui.com
  -- Development: ./run.sh -e dev -a api.vicinity.dev.bavenir.eu -b localhost:8080 -w .
- -- Local: ./run.sh [ without arguments, access on localhost:8080 ]
+ -- Local: ./run.sh -w . [ without arguments, access on localhost:8080 ]
 
 where:
     -h  shows help
@@ -85,7 +85,7 @@ fi
 # CLEAN OLD BUILD
 docker kill ${NAME} >/dev/null 2>&1
 docker rm ${NAME} >/dev/null 2>&1
-#docker rmi ${NAME} >/dev/null 2>&1
+# docker rmi ${NAME} >/dev/null 2>&1
 
 # Update nginx conf
 if [ ${SSL} == true ]; then
@@ -98,19 +98,21 @@ fi
 # Backend is SSL unless local settings
 if [ "${ENV}" == "local" ] ; then
   PROTOCOL="http"
+  BASE_API="localhost:3000"
+  BASE_WEB="localhost:8080"
 else
   PROTOCOL="https"
+  if [ "${ENV}" == "prod" ] ; then
+    BASE_API="api.vicinity.bavenir.eu"
+    BASE_WEB="vicinity.bavenir.eu"
+  else
+    BASE_API="api.vicinity.dev.bavenir.eu"
+    BASE_WEB="development.bavenir.eu"
+  fi
 fi
 mv ${WORKDIR}/aux ${WORKDIR}/nginx.conf
 
 # Update env file
-if [ "${ENV}" == "prod" ] ; then
-  BASE_API="api.vicinity.bavenir.eu"
-  BASE_WEB="vicinity.bavenir.eu"
-else
-  BASE_API="api.vicinity.dev.bavenir.eu"
-  BASE_WEB="development.bavenir.eu"
-fi
 cat ${WORKDIR}/app/envs/env.js \
   | sed 's/#a#/'${BASE_API}'/' \
   | sed 's/#b#/'${BASE_WEB}'/' \

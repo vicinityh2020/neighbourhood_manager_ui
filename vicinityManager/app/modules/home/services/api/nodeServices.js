@@ -16,6 +16,18 @@ factory('nodeAPIService', ['$http', 'configuration', '$window', function($http, 
     return $http.post(configuration.apiUrl + '/nodes/', data);
   };
 
+  nodeAPI.getKey = function(id) {
+    return $http.get(configuration.apiUrl + '/nodes/key/' + id);
+  };
+
+  nodeAPI.postKey = function(id, data) {
+    return $http.post(configuration.apiUrl + '/nodes/key/' + id, data);
+  };
+
+  nodeAPI.removeKey = function(id) {
+    return $http.delete(configuration.apiUrl + '/nodes/key/' + id);
+  };
+
   nodeAPI.pullIdFromOrganisation = function(cid,data) {
     return $http.put(configuration.apiUrl + '/nodes/node/' + cid, data);
   };

@@ -26,11 +26,12 @@
           <th>AGID<i ng-click="orderByMe('adid')" class="fa fa-fw fa-sort"/></th>
           <th>Types<i ng-click="orderByMe('types')" class="fa fa-fw fa-sort"/></th>
           <th># Items<i ng-click="orderByMe('# Items')" class="fa fa-fw fa-sort"/></th>
+          <th>Key</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="nod in nodes | orderBy:myOrderBy:rev">
-          <td class="col-sm-3">
+          <td class="col-sm-2">
             <a ui-sref="root.main.nodeDetail({nodeId: nod.adid})"><span>{{nod.name}}</span></a>
           </td>
           <td class="col-sm-3">
@@ -50,17 +51,16 @@
           <td class="col-sm-1">
             <span>{{nod.numItems}}</span>
           </td>
-          <!-- <td class="col-sm-2" >
-            <div ng-repeat="typ in nod.type">
-              <span class="label label-success pull-right">{{typ}}</span>
-            </div>
-          </td> -->
+          <td class="col-sm-1">
+            <div align="center"><i ng-show="nod.hasKey" style="color: green" class="fa fa-shield fa-lg"></i></div>
+            <div align="center"><i ng-show="!nod.hasKey" style="color: red" class="fa fa-close fa-lg"></i></div>
+          </td>
           <td class="col-sm-2">
-              <span>
-                <i ng-click="goToEdit(nod.adid)" style="color: black; padding-left:10%" class="fa fa-pencil fa-lg col-sm-6"></i>
-                <i ng-click="deleteNode(nod.adid)" style="color: red; padding-left:10%" class="fa fa-close fa-lg col-sm-6"></i>
-                <!-- <a ui-sref="root.main.nodeDetail({nodeId: nod._id})"><i style="padding-left:10%" class="fa fa-search fa-lg col-sm-6"></i></a> -->
-              </span>
+              <div align="center">
+                <button type="button" ng-click="goToEdit(nod.adid)" class="btn btn-default"><i style="color: black; padding-left:10%" class="fa fa-pencil fa-lg col-sm-4"></i></button>
+                <button type="button" ng-click="deleteNode(nod.adid)" class="btn btn-default"><i style="color: red; padding-left:10%" class="fa fa-close fa-lg col-sm-4"></i></button>
+                <button type="button" ng-click="showModal(nod.adid)" class="btn btn-default"><i style="color: blue; padding-left:10%" class="fa fa-key fa-lg col-sm-4"></i></button>
+              </div>
           </td>
         </tr>
       </tbody>
@@ -68,6 +68,29 @@
   </div>
 </div>
 <!-- /.box-body -->
+
+<!-- MODAL -->
+<div id="keymodal" class="modal">
+  <div class="modal-dialog" style="width: 40%; height: 40%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+          <span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Edit your public key</h4>
+      </div>
+      <div class="modal-body">
+        <textarea placeholder="gatewayKey" style="display: block; width: 100%; height: 100%; margin-top: 5px; margin-left: 0px; resize: none" type="text" ng-model="gatewayKey"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left" ng-click="removeModal()">Remove key</button>
+        <button type="button" class="btn btn-primary" ng-click="saveModal()">Save key</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 </section>
 <!-- /.box -->
 
@@ -109,4 +132,5 @@
     </div>
   </div>
   <hr>
+
 </section>
