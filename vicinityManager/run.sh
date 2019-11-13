@@ -107,7 +107,7 @@ else
     BASE_WEB="vicinity.bavenir.eu"
   else
     BASE_API="api.vicinity.dev.bavenir.eu"
-    BASE_WEB="development.bavenir.eu"
+    BASE_WEB="vicinity.dev.bavenir.eu"
   fi
 fi
 mv ${WORKDIR}/aux ${WORKDIR}/nginx.conf
