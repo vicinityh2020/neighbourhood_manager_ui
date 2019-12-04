@@ -44,6 +44,10 @@ function ($scope, $window, commonHelpers, $location, itemsAPIService,  Notificat
   function successCallback(response) {
     if(response.data.message){
       var newContracts = parseContracts(response.data.message);
+      // If no offset you are not loading new devices and contracts must be empty
+      if($scope.offset === 0) $scope.contracts = [];
+      console.log(newContracts);
+      console.log($scope.contracts)
       if(newContracts.length !== 0){myContractDetails(newContracts);}
       $scope.contracts = $scope.contracts.concat(newContracts);
     }
@@ -88,7 +92,6 @@ function ($scope, $window, commonHelpers, $location, itemsAPIService,  Notificat
   $scope.acceptContract = function(ctid){
     itemsAPIService.acceptContract(ctid)
       .then(function(response){
-        $scope.contracts = [];
         Notification.success("The contract was agreed!");
         reset();
       })
@@ -101,7 +104,6 @@ function ($scope, $window, commonHelpers, $location, itemsAPIService,  Notificat
   $scope.removeContract = function(ctid){
     itemsAPIService.removeContract(ctid)
       .then(function(response){
-        $scope.contracts = [];
         Notification.success("The contract was cancelled!");
         $scope.closeDetails();
         reset();
