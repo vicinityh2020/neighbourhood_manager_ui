@@ -339,20 +339,26 @@ TODO Check company BID
    $scope.baseHref = configuration.baseHref + '/#/login';
 
    $scope.resetMyPwd = function(){
-     if($scope.password1 === $scope.password2){
-       var data = {password : $scope.password1};
-       AuthenticationService.resetPwd($stateParams.userId, data)
-          .then(function(response){
-              $('div#recoverTmp').hide();
-              setTimeout(function() {
-                $('div#emailSentTmp').fadeIn('slow');
-              }, 1000);
-            })
-            .catch(function(err){
-              console.log(err);
-              Notification.error("Server error");
-            }
-          );
+      if($scope.password1 === $scope.password2){
+        if($scope.password1.length > 7){
+          var data = {password : $scope.password1};
+          AuthenticationService.resetPwd($stateParams.userId, data)
+            .then(function(response){
+                $('div#recoverTmp').hide();
+                setTimeout(function() {
+                  $('div#emailSentTmp').fadeIn('slow');
+                }, 1000);
+              })
+              .catch(function(err){
+                console.log(err);
+                Notification.error("Server error");
+              }
+            );
+          }else{
+            Notification.warning("Password has less than 8 characters or numbers");
+            $scope.password1 = "";
+            $scope.password2 = "";
+          }
         }else{
           Notification.warning("Passwords not matching");
           $scope.password1 = "";
