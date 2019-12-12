@@ -4,41 +4,59 @@
 
 <section class="content">
 
-<!-- Filters -->
-
-<div class="row">
-  <div class="col-sm-9">
-    <div class="dropdown" style="margin: 10px">
-      <a ui-sref="root.main.allServices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Visibility and access rights
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" role="menu">
-         <li><a ng-click="filterItems(0)" ui-sref="root.main.allServices">My disabled {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(1)" ui-sref="root.main.allServices">My private {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(2)" ui-sref="root.main.allServices">My {{typeOfItem}} for friends</a></li>
-         <li><a ng-click="filterItems(3)" ui-sref="root.main.allServices">My public {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(4)" ui-sref="root.main.allServices">My {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(5)" ui-sref="root.main.allServices">Friend's {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(6)" ui-sref="root.main.allServices">All public {{typeOfItem}}</a></li>
-         <li><a ng-click="filterItems(7)" ui-sref="root.main.allServices">All {{typeOfItem}}</a></li>
-      </ul>
-     </div>
-
-     <div class="dropdown" style="margin: 10px">
-       <a ui-sref="root.main.allServices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Service types
-         <span class="caret"></span>
-       </a>
-       <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="item in itemFilter.subclasses"><a ng-click="refresh(item)" ui-sref="root.main.allServices">{{item}}</a></li>
-       </ul>
+  <!-- Filter -->
+  <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Filter</h3>
+  
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-widget="collapse" ng-click="changeView()" ng-disabled="!listView"><i class="fa fa-th-large fa-lg"></i></button>
+          <button type="button" class="btn btn-box-tool" data-widget="collapse" ng-click="changeView()" ng-disabled="listView"><i class="fa fa-list fa-lg"></i></button>
+          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+              <div class="form-group">
+                  <label>Visibility and access rights</label>
+                  <ui-select
+                    ng-model="selectedAccessFilter"
+                    theme="bootstrap"
+                    ng-disabled="disabled"
+                    reset-search-input="true"
+                    title="Choose visibility and access filter"
+                    on-select="onAccessFilterSelected($item, $model)">
+                      <ui-select-match >
+                          <span ng-bind="$select.selected.name"></span>
+                      </ui-select-match>
+                      <ui-select-choices repeat="item in (accessFilterData | filter: $select.search) track by item.id">
+                          <span ng-bind="item.name"></span>
+                      </ui-select-choices>
+                  </ui-select>
+                </div>
+            <!-- /.form-group -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-6">
+            <!-- TODO: Loading ontology for dropdown needs to be fixed!! -->
+              <!-- <div class="dropdown" style="margin: 10px">
+                <a ui-sref="root.main.allServices" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter"></i> Service types
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li ng-repeat="item in itemFilter.subclasses"><a ng-click="refresh(item)" ui-sref="root.main.allServices">{{item}}</a></li>
+                </ul>
+              </div> -->
+            <!-- /.form-group -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.box-body -->
     </div>
-  </div>
-
-  <div align="right" class="col-sm-3" ng-if="!imMobile">
-    <button class="btn-xs btn-primary" ng-click="changeView()" ng-disabled="!listView"><i class="fa fa-th-large fa-lg"></i></button>
-    <button class="btn-xs btn-primary" ng-click="changeView()" ng-disabled="listView"><i class="fa fa-list fa-lg"></i></button>
-  </div>
-</div>
 
 <!-- Start -->
 
@@ -54,56 +72,68 @@
 
     <div class="col-lg-4" ng-repeat="it in items | nameFilter:searchTerm">
 
-      <!-- WIDGET -->
-      <div class="small-box bg-teal">
-        <div class="inner">
-
-          <!-- IMAGE AND TOOLTIP -->
-          <div class="tooltip2" id="circle_gray" style="cursor:default"> &nbsp; &nbsp; &nbsp;
-            <span class="tooltiptext2"> Unknown </span>
-          </div>
-          <div class="round">
-            <img style="cursor: pointer" onmouseover="" ui-sref="root.main.serviceProfile.whoSee({serviceId: it._id})" ng-src="{{it.avatar}}" alt="Company Avatar">
-          </div>
-
-          <!-- CONTENT -->
-          <div align="left">
-            <h4><a style="color: #000; z-index: -1" href="" ui-sref="root.main.serviceProfile.whoSee({serviceId: it._id})">{{it.name}}</a></h4>
-              <h5><a style="text-decoration: underline; color: #FFF" href="" ui-sref="root.main.companyProfile.services({companyAccountId: it.cid.id._id})">{{it.cid.id.name}}</a></h5>
-              <h5 ng-show="!it.isOwner && it.contracted > 0">Contracted {{it.contracted}} time(s)</h5>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-6" align="left">
-              <h5 ng-if="it.status === 'disabled'">{{it.statusCaption}}</h5>
-              <h5 ng-if="it.status !== 'disabled'">{{it.privacyCaption}}</h5>
+      <a ui-sref="root.main.serviceProfile.whoSee({serviceId: it._id})">
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+ 
+            <div class="widget-user-header bg-teal-active">
+ 
+              <h3 class="widget-user-username">{{ it.name | limitTo: 20 }}{{it.name.length > 20 ? '...' : ''}}</h3>
+              <h5 class="widget-user-desc">{{ it.cid.id.name | limitTo: 20 }}{{it.cid.id.name.length > 20 ? '...' : ''}}</h5>
             </div>
-            <div class="col-sm-6" align="right">
-              <img class="widget-logo-shq" ng-if="it.adid.type === 'shq'" src="img/logos/shqlogo.png"/>
-              <img class="widget-logo-vcnt" ng-if="it.adid.type === 'vcnt'" src="img/logos/vcntlogo.png"/>
+            <div class="widget-user-image" >
+              <img class="img-circle" style="background-color: white" ng-src="{{it.avatar}}" alt="Service Avatar">
+            </div>
+            <div class="box-footer">
+              <div class="row">
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+ 
+                    <h5 class="description-text" ng-if="it.status === 'disabled'">{{it.statusCaption}}</h5>
+                    <h5 class="description-text" ng-if="it.status !== 'disabled'">{{it.privacyCaption}}</h5>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <img style="max-width: 100%" ng-if="it.adid.type === 'shq'" src="img/logos/shqlogo.png"/>
+                    <img style="max-width: 100%" ng-if="it.adid.type === 'vcnt'" src="img/logos/vcntlogo.png"/>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block">
+                    <h5 ng-disabled="true" class="description-text" ng-show="!it.isOwner && !it.imFriend && !it.isContracted">
+                      Other's Service</h5>
+                    <h5 ng-disabled="true" href="#" class="description-text" ng-show="!it.isOwner && it.imFriend && !it.isContracted">
+                      Friend's Service</h5>
+                    <h5 ng-disabled="true" href="#" class="description-text" ng-show="it.isOwner">
+                      My Service</h5>
+                    <h5 ng-disabled="true" href="#" class="description-text" ng-show="it.isContracted">
+                      Contracted Service</h5>
+                      <span>
+                        <a href="" ui-sref="root.main.requestService({companyAccountId: it.cid.id._id, serviceId: it._id})" class="btn-xs btn-success btn-block centered" ng-show="!it.isOwner && canRequestService">
+                          <i class="fa fa-plus fa-lg"></i><b>Request service</b>
+                        </a>
+                        <!-- <a href="" ng-disabled="true" class="btn-xs btn-info btn-block centered" ng-show="it.isOwner">
+                          <i class="fa fa-user fa-lg"></i><b>My service</b>
+                        </a> -->
+                      </span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="small-box-footer">
-          <a href="" ui-sref="root.main.requestService({companyAccountId: it.cid.id._id, serviceId: it._id})" class="btn-xs btn-success btn-block centered" ng-show="!it.isOwner && canRequestService">
-            <i class="fa fa-plus fa-lg"></i>
-             &nbsp;<b>Request service</b>
-          </a>
-          <a href="" ng-disabled="true" class="btn-xs btn-info btn-block centered" ng-show="it.isOwner">
-            <i class="fa fa-user fa-lg"></i>
-             &nbsp;<b>My service</b>
-          </a>
-          <a href="" ui-sref="root.main.serviceProfile.whoSee({serviceId: it._id})" class="btn-xs btn-default btn-block centered">
-            More info <i class="fa fa-arrow-circle-right"></i>
-          </a>
-        </div>
-      </div>
-      <!-- END WIDGET -->
+        </a>
 
     </div>
-  </div>
+
 
 <!-- LIST VIEW -->
 

@@ -24,7 +24,19 @@ angular.module('VicinityManagerApp.controllers')
        $scope.myUserId = $window.sessionStorage.userAccountId;
        $scope.offset = 0;
        $scope.allItemsLoaded = false;
-       $scope.filterNumber = 7;
+       $scope.accessFilterData = [
+        {id: 0, name: "My disabled services"},
+        {id: 1, name: "My private services"},
+        {id: 2, name: "My services for friends"},
+        {id: 3, name: "My public services"},
+        {id: 4, name: "My services"},
+        {id: 5, name: "Friend's services"},
+        {id: 6, name: "All public services"},
+        {id: 7, name: "All services"}
+      ];
+      $scope.selectedAccessFilter = $scope.accessFilterData[7];
+      $scope.filterNumber = $scope.selectedAccessFilter.id;
+
        $scope.typeOfItem = "services";
        $scope.header = "All Services";
        $scope.canRequestService = false;
@@ -99,6 +111,11 @@ $scope.refresh = function(value){
       $scope.offset = 0;
       changeHeader(n);
       $scope.refresh();
+  };
+
+  $scope.onAccessFilterSelected = function(item){
+    $scope.offset = 0;
+    $scope.filterItems(item.id);
   };
 
   function changeHeader(n){
